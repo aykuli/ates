@@ -17,3 +17,4 @@ curl --location 'http://localhost:3001/oauth/token' \
 ## Sources
 
 1 [http://railscasts.com/episodes/353-oauth-with-doorkeeper](http://railscasts.com/episodes/353-oauth-with-doorkeeper)
+2 [https://rubyyagi.com/rails-api-authentication-devise-doorkeeper/](https://rubyyagi.com/rails-api-authentication-devise-doorkeeper/)

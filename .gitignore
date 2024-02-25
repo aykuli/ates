@@ -56,3 +56,8 @@ build-iPhoneSimulator/
 # .rubocop-https?--*
 
 .env
+
+auth/log/*
+auth/tmp
+auth/vendor
+auth/storage
