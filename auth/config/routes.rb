@@ -1,8 +1,13 @@
 Rails.application.routes.draw do
-  use_doorkeeper
+  root to: 'users#index'
+
+  use_doorkeeper do
+    skip_controllers :authorizations, :applications, :authorized_applications
+  end
+
   devise_for :users, controllers: {
-    sessions: 'user/sessions'
+    sessions: 'users/sessions'
   }
 
-  get "up" => "rails/health#show", as: :rails_health_check
+  get '/accounts/current', to: 'accounts#current'
 end
