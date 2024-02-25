@@ -1,3 +1,8 @@
+State.find_or_create_by!(code: States::CREATED,  title: "создана")
+State.find_or_create_by!(code: States::ASSIGNED, title: "назначена")
+State.find_or_create_by!(code: States::REASSIGNED, title: "переназначена")
+State.find_or_create_by!(code: States::DONE,     title: "сделана")
+
 # Like all users already signed up with oauth at least once
 # For dev use
 # public_uid is the same as public_uid in oauth service for dev purpose

@@ -1,0 +1,71 @@
+<% if @current_user.admin? %>
+  <div style="background-color: darkblue; color: white; padding: 20px">Admin's page</div>
+<% end %>
+
+<h2>Tasks</h2>
+<br />
+<%= @current_user.email %>
+<br />
+<br />
+<%= form_tag logout_url do %>
+  <div>
+    <%= submit_tag "Logout" %>
+  </div>
+<% end %>
+
+<br /><hr />
+<%= form_tag tasks_create_url do %>
+  <div>
+    <%= text_field_tag "title", nil, class: "form-control", placeholder: "Enter task title"%>
+    <%= submit_tag "Create task" %>
+  </div>
+<% end %>
+
+<% if @current_user.admin? %>
+  <br /><br /><hr />
+  <%= form_tag tasks_reassign_url do %>
+    <div>
+      <%= submit_tag "Reassign tasks" %>
+    </div>
+  <% end %>
+  <br /><br />
+<% end %>
+
+<br /><hr />
+<table id="tstyle">
+  <thead>
+  <tr>
+    <th>Название задачи</th>
+    <th>Состояние задачи</th>
+    <% if @current_user.admin? %> <th>Назначена на</th> <% end %>
+    <% if !@current_user.admin? %><th>Действие</th><% end %>
+    <th>Public UUID</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @tasks.each do |t| %>
+    <tr>
+      <td><%= t.title %></td>
+      <td><%= t.state.title %></td>
+      <% if @current_user.admin? %> <td> <%= t.assignee.email %> </td> <% end %>
+      <% if !@current_user.admin? %>
+        <td>
+          <% if t.state.code !=  States::DONE %>
+            <%= form_tag tasks_complete_url do %>
+              <div>
+                <%= text_field_tag "id", t.id, style: 'display:none'%>
+                <%= submit_tag "Complete" %>
+              </div>
+            <% end %>
+          <% else %>
+            -
+          <% end %>
+        </td>
+      <% end %>
+      <td><%= t.public_uid %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+<hr />

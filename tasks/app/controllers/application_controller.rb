@@ -18,4 +18,10 @@ class ApplicationController < ActionController::Base
 
   # @return [SessionsRepository]
   def sessions_repository = Rails.configuration.ioc.resolve('sessions_repository')
+
+  # @return [TasksUseCase]
+  def tasks_use_case = Rails.configuration.ioc.resolve('tasks_use_case')
+
+  # @return [TasksProducer]
+  def tasks_producer = Rails.configuration.ioc.resolve('tasks_producer')
 end
