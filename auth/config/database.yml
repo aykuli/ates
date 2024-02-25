@@ -1,0 +1,19 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: localhost
+  port: 5433
+  database: ates_auth
+  username: ates_auth
+  password: ates_auth
+  pool: 5
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+  database: auth_test
+
+production:
+  <<: *default
