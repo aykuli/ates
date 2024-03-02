@@ -1,0 +1,26 @@
+# Mandatory settings are described below
+#   you also can use environmental settings `config/settings/#{environment}.yml`
+
+rails:
+  secret_key_base: "e9c3b9ff77c338866f779ea3062f20d33b6e182a433bd45bdc77eb2ab884ecfd04b38d7a3ebdde1b10395f3708ca5a57b8ecaf1f15a7e1cf457d748939516d2c"
+
+database:
+  adapter: postgresql
+  host: localhost
+  port: 5432
+  username: ates_tasks
+  password: ates_tasks
+  database: ates_tasks
+  encoding: unicode
+
+oauth:
+  host: http://localhost:3000
+
+application:
+  id:     CW2BZEEPpDZuT8CXiHrDUtNOjKzr__PwqSMbwrsNltc
+  secret: kCRxmZnQb6qin6jKEx_g8qs2ZcL8ZgAFe46GsaCVGO8
+
+karafka:
+  admin:    admin
+  password: password
+
