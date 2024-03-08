@@ -62,3 +62,5 @@ log/
 master.key
 settings.yml
 compose.dev.yml
+volumes
+
