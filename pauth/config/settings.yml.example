@@ -1,13 +1,7 @@
-# Mandatory settings are described below
-#   you also can use environmental settings `config/settings/#{environment}.yml`
-
-rails:
-  secret_key_base: some_key
-
 database:
   adapter: postgresql
   host: localhost
-  port: 5433
+  port: 5432
   username: ates_auth
   database: ates_auth
   encoding: unicode

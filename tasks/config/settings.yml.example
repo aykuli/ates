@@ -1,13 +1,7 @@
-# Mandatory settings are described below
-#   you also can use environmental settings `config/settings/#{environment}.yml`
-
-rails:
-  secret_key_base: some_key
-
 database:
   adapter: postgresql
   host: localhost
-  port: 5432
+  port: 5433
   username: ates_tasks
   database: ates_tasks
   encoding: unicode
@@ -15,6 +9,9 @@ database:
 application:
   id:     some_uid_from_oauth__applications
   secret: some_secret_key_from_oauth_applications
+
+oauth:
+  host: http://localhost:3000
 
 karafka:
   admin:    admin
