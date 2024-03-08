@@ -56,3 +56,9 @@ build-iPhoneSimulator/
 # .rubocop-https?--*
 
 .env
+
+tmp/
+log/
+master.key
+settings.yml
+compose.dev.yml
