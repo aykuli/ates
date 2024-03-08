@@ -1,0 +1,19 @@
+default: &default
+  adapter:  <%= Settings.database.adapter %>
+  encoding: <%= Settings.database.encoding %>
+  host:     <%= Settings.database.host %>
+  port:     <%= Settings.database.port %>
+  database: <%= Settings.database.database %>
+  username: <%= Settings.database.username %>
+  password: <%= Settings.database.password %>
+  pool:     5
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+  database: auth_test
+
+production:
+  <<: *default

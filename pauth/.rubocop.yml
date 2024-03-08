@@ -1,0 +1,28 @@
+require:
+  - rubocop-rails
+
+AllCops:
+  TargetRubyVersion: 3.2.2
+  NewCops: enable
+  Exclude:
+    - config/routes.rb
+    - config/application.rb
+    - config/environments/*
+    - db/schema.rb
+    - db/**/*
+    - Gemfile
+    - Gemfile.package
+    - Guardfile
+    - Rakefile
+    - config.ru
+    - vendors/**/*
+    - bin/*
+
+Style/Documentation:
+  Enabled: false
+
+Style/NumberedParameters:
+  Enabled: false
+
+Rails/InverseOf:
+  Enabled: false
