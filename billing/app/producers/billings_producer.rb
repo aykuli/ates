@@ -3,61 +3,55 @@ class BillingsProducer
 
   register initialize: true, memoize: true
 
-  TOPIC = 'billing-streaming'
+  TOPIC = 'billings-streaming'
   PRODUCER = 'billing-service'
   SCHEMA_NAME = 'billing'
 
-  # @param billing_events  [Array<Event>]
-  # @param version        [Integer]
-  # @raise                [Rdkafka::RdkafkaError]
-  # @raise                [WaterDrop::Errors::MessageInvalidError]
-  # @return               [Array<Rdkafka::Producer::DeliveryHandle>]
-  def produce_many_async(billing_events, version: 1)
-    state_code = billing_events.first&.state&.code
-    logger.error(message: "Wrong state of billing event: #{billing_events.to_s}", producer: PRODUCER) unless state_code
+  MANAGEMENT_EARN_EVENT     = 'earned'
+  MANAGEMENT_DEDUCTED_EVENT = 'deduct'
 
-    events = billing_events.map { build_event(_1.state.code, prepare(_1)).merge(event_version: version) }
-    result = SchemaRegistry.validate_event(events, "#{SCHEMA_NAME}.#{state_code}", version:)
+  # @param event_name [String]
+  # @param task       [Task]
+  # @param version    [Integer]
+  # @raise            [Rdkafka::RdkafkaError]
+  # @raise            [WaterDrop::Errors::MessageInvalidError]
+  # @return           [Rdkafka::Producer::DeliveryHandle]
+  def produce_async(event_name, task, version: 1)
+    event = build_event(event_name, task)
+
+    result = SchemaRegistry.validate_event(event, "#{SCHEMA_NAME}.#{event_name}", version:)
 
     if result.success?
-      produce_many(events)
+      produce(event)
     else
-      result.result.each { logger.error(message: "validator_message: #{_1}, event: #{::JSON.serialize(_1)}" , producer: PRODUCER) }
+      result.result.each { logger.error(message: _1, producer: PRODUCER) }
     end
   end
 
   private
 
-  # @param events [Array<Hash>]
+  # @param events [Hash]
   # @raise        [Rdkafka::RdkafkaError]
   # @raise        [WaterDrop::Errors::MessageInvalidError]
-  # @return       [Array<Rdkafka::Producer::DeliveryHandle>]
-  def produce_many(events)
+  # @return       [Rdkafka::Producer::DeliveryHandle]
+  def produce(events)
     Karafka.producer.produce_many_async(events.map { { topic: TOPIC, payload: _1.to_json } })
   end
 
-  # @param state_code [String]
-  # @param data       [Hash]
+  # @param event_name [String]
+  # @param task       [Task]
   # @return           [Hash]
-  def build_event(state_code, data)
+  def build_event(event_name, task)
     {
-      event_name: "task.#{state_code}",
+      event_name: "#{SCHEMA_NAME}.#{event_name}",
       event_uid: SecureRandom.uuid,
       event_time: Time.zone.now.to_s,
       producer: PRODUCER,
-      data:
+      data: {
+        cost:                task.assign_cost,
+        assignee_public_uid: task.task.assignee.public_uid,
+        task_public_uid:     task.task.public_uid
+      }
     }
   end
-
-  # @param event [Event]
-  # @return     [Hash]
-  def prepare(event)
-    {
-      event_public_uid: event.public_uid,
-      event_state: event.state.slice(:code, :title),
-      user_public_uid: event.user.public_uid,
-      cost: event.cost
-    }
-  end
-
 end

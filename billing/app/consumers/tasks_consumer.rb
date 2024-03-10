@@ -3,9 +3,6 @@
 class TasksConsumer < ApplicationConsumer
   include Aux::Pluggable
 
-  # @!attribute [r] task_costs_use_case
-  #   @return [TaskCostsUseCase]
-  resolve :task_costs_use_case
   # @!attribute [r] tasks_use_case
   #   @return [TasksUseCase]
   resolve :tasks_use_case
@@ -13,16 +10,15 @@ class TasksConsumer < ApplicationConsumer
   # rubocop:disable
   def consume
     messages.each do |message|
-      task_data = take_task_data_from(message.payload['data'])
+      task_data = take_task(message.payload['data'])
 
       case [message.payload['event_name'], message.payload['event_version']]
       when ['task.assigned', 2]
-        task = tasks_use_case.create!(task_data)
-        task_costs_use_case.count_payments!(task)
+        tasks_use_case.assign_payments(task_data)
       when ['task.reassigned', 1]
-        task_costs_use_case.reassign_payments!(task_data)
+        tasks_use_case.reassign_payments(task_data)
       when ['task.done', 1]
-        task_costs_use_case.done_payments!(task_data)
+        tasks_use_case.pay_done_task(task_data)
       end
     end
   end
@@ -34,7 +30,7 @@ class TasksConsumer < ApplicationConsumer
   #   @key assignee_public_uid  [String]
   #   @key task_title           [String]
   #   @key jira_id              [String]
-  def take_task_data_from(data)
+  def take_task(data)
     {
       public_uid: data.delete('task_public_uid'),
       assignee_public_uid: data.delete('assignee_public_uid'),

@@ -1,11 +1,3 @@
-State.find_or_create_by!(code: States::CREATED,  title: "создана")
-State.find_or_create_by!(code: States::ASSIGNED, title: "назначена")
-State.find_or_create_by!(code: States::REASSIGNED, title: "переназначена")
-State.find_or_create_by!(code: States::DONE,     title: "сделана")
-
-# Like all users already signed up with oauth at least once
-# For dev use
-# public_uid is the same as public_uid in oauth service for dev purpose
 User.create!(email: 'admin@a.ru',  public_uid: 'b973d192-5085-4a4f-86a8-3ab15e8db223', admin: true)
 User.create!(email: 'popug0@a.ru', public_uid: 'd5a21894-854b-4b76-bf67-e633919c18cd')
 User.create!(email: 'popug1@a.ru',  public_uid: '6cca3aec-c6f5-4276-9d60-3776b05f9766')

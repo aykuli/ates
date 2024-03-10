@@ -8,5 +8,11 @@ class KarafkaApp < Karafka::App
   end
 
   routes.draw do
+    topic 'users-streaming' do
+      consumer UsersConsumer
+    end
+    topic 'billings-streaming' do
+      consumer BillingsConsumer
+    end
   end
 end

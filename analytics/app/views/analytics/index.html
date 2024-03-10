@@ -1,0 +1,21 @@
+<div>
+    <div>
+        <span>Сегодня топ-менеджмент заработал: </span>
+        <span><%= @management_balance %></span>
+
+    </div>
+
+    <div>
+        <span>Попугов ушло в минус: </span>
+        <span><%= @popugs_in_debt %></span>
+    </div>
+    <div>
+        <span>Самые дорогие задачи: </span>
+        <% @task_costs.each do |tc| %>
+            <p>
+                <span><%= tc.date %> - </span>
+                <span><%= tc.cost %></span>
+            </p>
+        <% end %>
+    </div>
+</div>

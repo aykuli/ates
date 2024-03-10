@@ -29,6 +29,9 @@ class KarafkaApp < Karafka::App
   )
 
   routes.draw do
+    topic 'users-streaming' do
+      consumer UsersConsumer
+    end
     topic 'tasks-streaming' do
       consumer TasksConsumer
     end

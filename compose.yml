@@ -38,6 +38,19 @@ services:
     networks:
       - internal
 
+  analytics_db:
+    image: postgres:latest
+    container_name: analytics_db
+    environment:
+      POSTGRES_DB: ates_analytics
+      POSTGRES_USER: ates_analytics
+    ports:
+      - 5435:5432
+    volumes:
+      - ./volumes/analytics_db:/var/lib/postgresql/data
+    networks:
+      - internal
+
   kafka:
     container_name: kafka
     image: confluentinc/cp-kafka:7.6.0
