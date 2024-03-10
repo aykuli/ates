@@ -6,7 +6,6 @@ class CreateDoorkeeperTables < ActiveRecord::Migration[7.1]
       t.string  :name,    null: false
       t.string  :uid,     null: false
       t.string  :secret,  null: false
-
       t.text    :redirect_uri
       t.string  :scopes,       null: false, default: ''
       t.boolean :confidential, null: false, default: true
@@ -37,7 +36,6 @@ class CreateDoorkeeperTables < ActiveRecord::Migration[7.1]
       t.references :resource_owner, index: true
 
       t.references :application,    null: false
-
       t.string :token, null: false
 
       t.string   :refresh_token
@@ -45,7 +43,6 @@ class CreateDoorkeeperTables < ActiveRecord::Migration[7.1]
       t.string   :scopes
       t.datetime :created_at, null: false
       t.datetime :revoked_at
-
       t.string   :previous_refresh_token, null: false, default: ''
     end
 

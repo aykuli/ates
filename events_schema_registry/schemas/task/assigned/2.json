@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "task.assigned.v2",
+  "description": "json schema for task assigned event (version 2)",
+  "type": "object",
+
+  "properties": {
+    "event_uid":     { "type": "string" },
+    "event_version": { "enum": [2] },
+    "event_name":    { "type": "string" },
+    "event_time":    { "type": "string" },
+    "producer":      { "type": "string" },
+
+    "data": { "$ref": "#/definitions/event_data" }
+  },
+
+  "definitions": {
+    "event_data": {
+      "type": "object",
+      "properties": {
+        "task_public_uid":      { "type": "string" },
+        "assignee_public_uid":  { "type": "string" },
+        "task_title":           { "type": "string" },
+        "jira_id":              { "type": "string" }
+      },
+      "required": ["task_public_uid", "assignee_public_uid"]
+    }
+  },
+
+  "required": ["event_version", "event_name", "data"]
+}
+

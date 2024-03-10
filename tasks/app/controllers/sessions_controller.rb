@@ -21,11 +21,11 @@ class SessionsController < ApplicationController
 
   # @param request [ActionDispatch::Request]
   # @return [Session, nil]
-  def create_session!(request)
+  def create_session!(request) # rubocop:disable Metrics/AbcSize
     auth = request.env['omniauth.auth']
     return unless auth && auth[:info]
 
-    current_user = users_repository.find_or_create_by!(public_uid: auth[:info][:public_uid])
+    current_user = users_repository.find_or_create_by!( public_uid: auth[:info][:public_uid])
     return unless current_user
 
     manage_sessions(current_user, request, auth)

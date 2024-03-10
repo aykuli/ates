@@ -12,6 +12,7 @@ class CreateInitialTables < ActiveRecord::Migration[7.1]
       t.timestamps
     end
     add_index :users, :email, unique: true, name: :users_email_key
+    add_index :users, :public_uid,   unique: true, name: :users_uid_key
 
     create_table :sessions, id: :uuid do |t|
       t.integer  :user_id,      null: false
@@ -29,10 +30,10 @@ class CreateInitialTables < ActiveRecord::Migration[7.1]
       t.timestamps
     end
 
-    create_enum :state_code, %i[created assigned reassigned done]
-    create_table :states do |t|
-      t.string  :title, null: false
-      t.enum    :code,  enum_type: :state_code, default: :created
+    create_enum   :state_code, %i[created assigned reassigned done]
+    create_table  :states do |t|
+      t.string    :title, null: false
+      t.enum      :code,  enum_type: :state_code, default: :created
     end
 
     create_table :events do |t|

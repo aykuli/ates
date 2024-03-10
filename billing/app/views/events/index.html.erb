@@ -1,0 +1,37 @@
+<h2>Дашборд аккаунтинга</h2>
+<br />
+<p>Вы: <%= @current_user.email %></p>
+<br />
+<p>Текущий баланс: <b><%= @current_balance %></b></p>
+<br />
+
+<p><b>Лог операций</b></p>
+<table id="tstyle">
+  <thead>
+  <tr>
+    <th>Событие</th>
+    <th>Название задачи</th>
+    <th>Цена события</th>
+    <th>Цена ассайна</th>
+    <th>Цена решения</th>
+    <th>uid задачи</th>
+    <th>Jira ID задачи</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @events.each do |event| %>
+    <tr>
+      <td><%= event.state.title %></td>
+      <td><%= event.task_cost.task_title %></td>
+      <td><%= event.cost %></td>
+      <td><%= event.task_cost.assign_cost %></td>
+      <td><%= event.task_cost.solving_cost %></td>
+      <td><%= event.task_cost.task_public_uid %></td>
+      <td><%= event.task_cost.jira_id %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<hr />

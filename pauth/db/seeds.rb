@@ -14,4 +14,5 @@ p3.update!(password: 'password123', password_confirmation: 'password123')
 p4 = User.find_or_initialize_by(email: 'popug4@a.ru', public_uid:  '42b5f842-3775-474f-96a0-1c4c445aa370')
 p4.update!(password: 'password123', password_confirmation: 'password123')
 
-Doorkeeper::Application.find_or_create_by!(name: 'Tasks', redirect_uri: 'http://localhost:3001/auth/ates/callback')
+Doorkeeper::Application.find_or_create_by!(name: 'Tasks',   redirect_uri: 'http://localhost:3001/auth/ates/callback')
+Doorkeeper::Application.find_or_create_by!(name: 'Billing', redirect_uri: 'http://localhost:3002/auth/ates/callback')

@@ -51,3 +51,7 @@ gem "karafka", ">= 2.3.0"
 gem "karafka-web", "~> 0.8.2"
 
 gem "config", "~> 5.1"
+
+gem "schema_registry", "~> 1", :path => "../events_schema_registry/ruby/"
+
+gem "click_house", "~> 2.1"

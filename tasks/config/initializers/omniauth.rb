@@ -29,6 +29,8 @@ module OmniAuth
 end
 
 Rails.application.config.middleware.use OmniAuth::Builder do
+  OmniAuth.config.allowed_request_methods = [:get]
+
   provider :developer if Rails.env.development?
   provider :ates, Settings.application.id, Settings.application.secret
 end

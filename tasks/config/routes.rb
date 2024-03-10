@@ -14,4 +14,5 @@ Rails.application.routes.draw do
   post 'tasks/create', to: 'tasks#create'
   post 'tasks/reassign', to: 'tasks#reassign'
   post 'tasks/complete', to: 'tasks#complete'
+  get 'tasks/error', to: 'tasks#error'
 end

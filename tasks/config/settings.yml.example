@@ -6,12 +6,18 @@ database:
   database: ates_tasks
   encoding: unicode
 
+oauth:
+  host: http://localhost:3000
+
 application:
   id:     some_uid_from_oauth__applications
   secret: some_secret_key_from_oauth_applications
 
-oauth:
-  host: http://localhost:3000
+kafka:
+  host: http://localhost:9092
+
+kafka:
+  host: http://localhost:9092
 
 kafka:
   host: http://localhost:9092

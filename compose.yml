@@ -25,6 +25,19 @@ services:
     networks:
       - internal
 
+  billing_db:
+    image: postgres:latest
+    container_name: billing_db
+    environment:
+      POSTGRES_DB: ates_billing
+      POSTGRES_USER: ates_billing
+    ports:
+      - 5434:5432
+    volumes:
+      - ./volumes/billing_db:/var/lib/postgresql/data
+    networks:
+      - internal
+
   kafka:
     container_name: kafka
     image: confluentinc/cp-kafka:7.6.0
@@ -49,7 +62,8 @@ services:
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
       KAFKA_AUTHORIZER_CLASS_NAME: org.apache.kafka.metadata.authorizer.StandardAuthorizer
     volumes:
-      - ./volumes/karafka:/var/lib/kafka/da
+      - ./volumes/karafka:/var/lib/kafka/data
+
 networks:
   internal:
     name: ates
