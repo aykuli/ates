@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "billing.deducted.v1",
+  "description": "json schema for management billing deducted event (version 1)",
+  "type": "object",
+
+  "properties": {
+    "event_uid":     { "type": "string" },
+    "event_version": { "enum": [1] },
+    "event_name":    { "type": "string" },
+    "event_time":    { "type": "string" },
+    "producer":      { "type": "string" },
+
+    "data": { "$ref": "#/definitions/event_data" }
+  },
+
+  "definitions": {
+    "event_data": {
+      "type": "object",
+      "properties": {
+        "task_public_uid":      { "type": "string" },
+        "assignee_public_uid":  { "type": "string" },
+        "cost":                 { "type": "integer" }
+      },
+      "required": ["task_public_uid", "assignee_public_uid", "cost"]
+    }
+  },
+
+  "required": ["event_name", "data"]
+}
