@@ -8,7 +8,7 @@ class BillingsProducer
   SCHEMA_NAME = 'billing'
 
   MANAGEMENT_EARN_EVENT     = 'earned'
-  MANAGEMENT_DEDUCTED_EVENT = 'deduct'
+  MANAGEMENT_DEDUCTED_EVENT = 'deducted'
 
   # @param event_name [String]
   # @param task       [Task]
