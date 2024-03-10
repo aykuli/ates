@@ -26,3 +26,12 @@ Style/NumberedParameters:
 
 Rails/DynamicFindBy:
   Enabled: false
+
+Rails/InverseOf:
+  Enabled: false
+
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 20

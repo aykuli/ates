@@ -1,0 +1,21 @@
+database:
+  adapter: postgresql
+  host: localhost
+  port: 5432
+  username: ates_tasks
+  database: ates_tasks
+  encoding: unicode
+
+oauth:
+  host: http://localhost:3000
+
+application:
+  id:     some_uid_from_oauth__applications
+  secret: some_secret_key_from_oauth_applications
+
+kafka:
+  host: localhost:9092
+
+karafka:
+  admin:    admin
+  password: password
