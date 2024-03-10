@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   def authenticate
     @current_user = users_repository.find_by_session(request.session[:session_id])
 
-    redirect_to login_path unless @current_user
+    redirect_to login_path unless @current_user&.admin?
   end
 
   # @return [UsersRepository]

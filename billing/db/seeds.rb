@@ -1,6 +1,8 @@
 State.find_or_create_by!(code: States::EARNED,     title: "заработано")
 State.find_or_create_by!(code: States::DEDUCTED,   title: "вычтено")
 State.find_or_create_by!(code: States::SUMMARIZED, title: "подытожено")
+State.find_or_create_by!(code: States::SENT,       title: "деньги отправлены")
+
 
 # uid is the same as public_id in oauth service for dev purpose
 User.create!(email: 'admin@a.ru',  public_uid: 'b973d192-5085-4a4f-86a8-3ab15e8db223', admin: true)

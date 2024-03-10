@@ -39,3 +39,7 @@ gem "karafka", "~> 2.3"
 gem "omniauth-oauth2", "~> 1.8"
 gem "omniauth", "~> 2.1"
 gem "schema_registry", "~> 1", :path => "../events_schema_registry/ruby/"
+
+gem "sidekiq", "~> 7.2"
+
+gem "sidekiq-scheduler", "~> 5.0"

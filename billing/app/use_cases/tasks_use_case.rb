@@ -8,6 +8,9 @@ class TasksUseCase
   # @!attribute [r] users_repository
   #   @return [UsersRepository]
   resolve :users_repository
+  # @!attribute [r] states_repository
+  #   @return [StatesRepository]
+  resolve :states_repository
   # @!attribute [r] repository
   #   @return [TasksRepository]
   resolve :tasks_repository, as: :repository
@@ -99,8 +102,20 @@ class TasksUseCase
     top_management  = users_repository.find_by(admin: true)
 
     ActiveRecord::Base.transaction do
-      create_event!(task.assignee,       code: States::EARNED,   task:, cost: task.solving_cost)
+      create_event!(task.assignee,  code: States::EARNED,   task:, cost: task.solving_cost)
       create_event!(top_management, code: States::DEDUCTED, task:, cost: task.solving_cost)
     end
+  end
+
+  # @param task       [Task]
+  # @param state_code [String]
+  #   @key user       [User]
+  #   @key assignee   [User]
+  def create_event(task, state_code, user:, assignee: nil)
+    task.events.create!(
+      state: states_repository.find_by(code: state_code),
+      user_id: user.id,
+      assignee_id: assignee&.id
+    )
   end
 end
