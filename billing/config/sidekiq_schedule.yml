@@ -1,5 +1,5 @@
 :schedule:
-  hello_world:
+  summarize_users_balance:
     cron: '55 23 * * *'
     class: SummarizeUsersBalanceWorker
 

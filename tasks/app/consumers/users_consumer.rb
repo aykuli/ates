@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Example consumer that prints messages payloads
 class UsersConsumer < ApplicationConsumer
   include Aux::Pluggable
 

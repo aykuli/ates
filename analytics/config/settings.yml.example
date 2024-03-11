@@ -1,9 +1,9 @@
 database:
   adapter: postgresql
   host: localhost
-  port: 5435
-  username: username
-  database: database
+  port: 5433
+  username: ates_tasks
+  database: ates_tasks
   encoding: unicode
 
 application:
