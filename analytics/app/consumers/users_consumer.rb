@@ -16,6 +16,7 @@ class UsersConsumer < ApplicationConsumer
       case [message.payload['event_name'], message.payload['event_version']]
       when ['user.created', 1]
         use_case.create_user(user_data)
+
       when ['user.updated', 1]
         use_case.update_user(user_data)
       end

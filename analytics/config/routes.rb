@@ -9,5 +9,4 @@ Rails.application.routes.draw do
   post "logout", to: 'sessions#destroy'
 
   root to: "analytics#index"
-
 end

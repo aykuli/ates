@@ -5,11 +5,6 @@ class BalancesRepository
 
   register initialize: true, memoize: true
 
-  # @!method find_by(attributes)
-  #   @param attributes [Hash]
-  #   @return [Balance]
-  # delegate :find_by, to: :gateway
-
   # @param user [User]
   # @return [Balance]
   def last_record(user) = gateway.find_by(user_id: user.id).last

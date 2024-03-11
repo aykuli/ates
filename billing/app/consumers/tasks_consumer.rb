@@ -15,8 +15,10 @@ class TasksConsumer < ApplicationConsumer
       case [message.payload['event_name'], message.payload['event_version']]
       when ['task.assigned', 2]
         tasks_use_case.assign_payments(task_data)
+
       when ['task.reassigned', 1]
         tasks_use_case.reassign_payments(task_data)
+
       when ['task.done', 1]
         tasks_use_case.pay_done_task(task_data)
       end

@@ -21,9 +21,4 @@ class AnalyticsUseCase
 
     balances_repository.last_record(user: top_management)
   end
-
-  # @return [ActiveRecord::Collection<Balance>]
-  delegate :users_in_debt, to: :balances_repository
-
-  delegate :costly_tasks_by_day, to: :done_tasks_repository
 end

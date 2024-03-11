@@ -19,6 +19,7 @@ class BillingsConsumer
       case [message.payload['event_name'], message.payload['event_version']]
       when ["billing.#{EARNED_EVENT_NAME}", 1]
         balances_use_case.write(EARNED_EVENT_NAME, billing_data)
+
       when ["billing.#{DEDUCTED_EVENT_NAME}", 1]
         balances_use_case.write(DEDUCTED_EVENT_NAME, billing_data)
       end
