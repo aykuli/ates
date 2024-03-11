@@ -40,7 +40,7 @@ class TasksUseCase
     charge_assigned_task!(task)
 
     producer.produce_async(BillingsProducer::MANAGEMENT_EARN_EVENT, {
-      cost:       task.assign_cost,
+      cost: task.assign_cost,
       assignee_public_uid: task_data[:assignee_public_uid]
     })
 
@@ -58,7 +58,7 @@ class TasksUseCase
     charge_assigned_task!(task)
 
     producer.produce_async(BillingsProducer::MANAGEMENT_EARN_EVENT, {
-      cost:       task.assign_cost,
+      cost: task.assign_cost,
       assignee_public_uid: task.assignee.public_uid,
     })
   end
@@ -70,13 +70,13 @@ class TasksUseCase
   #   @key task_title           [String]
   #   @key jira_id              [String]
   def pay_done_task(task_data)
-    task      = repository.find_by(public_uid: task_data[:task_public_uid])
+    task = repository.find_by(public_uid: task_data[:task_public_uid])
 
     charge_done_task!(task)
 
 
     producer.produce_async(BillingsProducer::MANAGEMENT_DEDUCTED_EVENT, {
-      cost:task.solving_cost,
+      cost: task.solving_cost,
       assignee_public_uid: task.assignee.public_uid
     })
   end

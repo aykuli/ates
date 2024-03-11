@@ -8,5 +8,6 @@ class CreateClickhouseTables < ActiveRecord::Migration[7.1]
     t.String   :message
     t.String   :producer, default: nil
     t.String   :level
+    t.JSON     :payload
   end
 end

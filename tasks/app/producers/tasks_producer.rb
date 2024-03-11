@@ -42,7 +42,7 @@ class TasksProducer
     if result.success?
       produce_many(events)
     else
-      result.result.each { logger.error(message: _1, producer: PRODUCER) }
+      logger.error(message: result.result.join(':'), producer:PRODUCER, payload: event.to_json)
     end
   end
 
@@ -53,7 +53,11 @@ class TasksProducer
   # @raise         [WaterDrop::Errors::MessageInvalidError]
   # @return        [Rdkafka::Producer::DeliveryHandle]
   def produce(payload)
-    Karafka.producer.produce_async(topic: TOPIC, payload: payload.to_json)
+    begin
+      Karafka.producer.produce_async(topic: TOPIC, payload: payload.to_json)
+    rescue => e
+      logger.error(message: e.message, producer: PRODUCER, payload: events.to_json)
+    end
   end
 
   # @param events [Array<Hash>]
@@ -61,7 +65,11 @@ class TasksProducer
   # @raise        [WaterDrop::Errors::MessageInvalidError]
   # @return       [Array<Rdkafka::Producer::DeliveryHandle>]
   def produce_many(events)
-    Karafka.producer.produce_many_async(events.map { { topic: TOPIC, payload: _1.to_json } })
+    begin
+      Karafka.producer.produce_many_async(events.map { { topic: TOPIC, payload: _1.to_json } })
+    rescue => e
+      logger.error(message: e.message, producer: PRODUCER, payload: events.to_json)
+    end
   end
 
   # @param state_code [String]

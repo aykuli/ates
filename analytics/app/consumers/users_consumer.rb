@@ -5,9 +5,9 @@ class UsersConsumer < ApplicationConsumer
 
   register initialize: true, memoize: true
 
-  # @!attribute [r] users_repository
-  #   @return [UsersRepository]
-  resolve :users_repository
+  # @!attribute [r] users_use_case
+  #   @return [UsersUseCase]
+  resolve :users_use_case, as: :use_case
 
   def consume
     messages.each do |message|
@@ -15,15 +15,9 @@ class UsersConsumer < ApplicationConsumer
 
       case [message.payload['event_name'], message.payload['event_version']]
       when ['user.created', 1]
-        user = users_repository.create!(**user_data)
-        next unless user
-
-        user.update!(**user_data)
+        use_case.create_user(user_data)
       when ['user.updated', 1]
-        user = users_repository.find_by(public_uid: user_data.delete('public_uid'))
-        next unless user
-
-        user.update!(**user_data)
+        use_case.update_user(user_data)
       end
     end
   end

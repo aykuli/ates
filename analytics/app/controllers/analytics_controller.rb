@@ -11,5 +11,6 @@ class AnalyticsController < ApplicationController
 
   private
 
+  # @return [AnalyticsUseCase]
   def use_case = Rails.configuration.ioc.resolve('analytics_use_case')
 end

@@ -3,7 +3,7 @@
 class KarafkaApp < Karafka::App
   setup do |config|
     config.kafka = { 'bootstrap.servers': Settings.kafka.host }
-    config.client_id = 'analytics_service'
+    config.client_id = 'analytics-service'
     config.consumer_persistence = !Rails.env.development?
   end
 
@@ -13,6 +13,12 @@ class KarafkaApp < Karafka::App
     end
     topic 'billings-streaming' do
       consumer BillingsConsumer
+
+      dead_letter_queue(
+        topic: 'billings-streaming-dead-messages',
+        max_retries: 2,
+        independent: false
+      )
     end
   end
 end

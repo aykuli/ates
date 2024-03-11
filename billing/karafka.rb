@@ -34,6 +34,12 @@ class KarafkaApp < Karafka::App
     end
     topic 'tasks-streaming' do
       consumer TasksConsumer
+
+      dead_letter_queue(
+        topic: 'tasks-streaming-dead-messages',
+        max_retries: 2,
+        independent: false
+      )
     end
   end
 end

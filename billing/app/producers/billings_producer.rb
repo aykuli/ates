@@ -10,14 +10,14 @@ class BillingsProducer
   MANAGEMENT_EARN_EVENT     = 'earned'
   MANAGEMENT_DEDUCTED_EVENT = 'deducted'
 
-  # @param event_name [String]
-  # @param task       [Task]
-  # @param version    [Integer]
-  # @raise            [Rdkafka::RdkafkaError]
-  # @raise            [WaterDrop::Errors::MessageInvalidError]
-  # @return           [Rdkafka::Producer::DeliveryHandle]
-  def produce_async(event_name, task, version: 1)
-    event = build_event(event_name, task)
+  # @param event_name   [String]
+  # @param billing_data [Hash]
+  #   # @param version  [Integer]
+  #   # @raise          [Rdkafka::RdkafkaError]
+  # @raise              [WaterDrop::Errors::MessageInvalidError]
+  # @return             [Rdkafka::Producer::DeliveryHandle]
+  def produce_async(event_name, billing_data, version: 1)
+    event = build_event(event_name, billing_data)
 
     result = SchemaRegistry.validate_event(event, "#{SCHEMA_NAME}.#{event_name}", version:)
 
@@ -38,10 +38,10 @@ class BillingsProducer
     Karafka.producer.produce_many_async(events.map { { topic: TOPIC, payload: _1.to_json } })
   end
 
-  # @param event_name [String]
-  # @param task       [Task]
-  # @return           [Hash]
-  def build_event(event_name, task)
+  # @param event_name    [String]
+  # @param billing_data  [Hash]
+  # @return              [Hash]
+  def build_event(event_name, billing_data)
     {
       event_name: "#{SCHEMA_NAME}.#{event_name}",
       event_uid: SecureRandom.uuid,
