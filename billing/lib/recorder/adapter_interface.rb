@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module Recorder
-  # Adds few mandatory methods to any recorder object to be compatible with the application
   module AdapterInterface
     # The only method every adapter must to implement
     # @raise NotImplementedError

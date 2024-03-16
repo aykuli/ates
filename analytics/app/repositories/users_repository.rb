@@ -11,7 +11,19 @@ class UsersRepository
   # @!method create!(attributes)
   #   @param attributes [Hash]
   #   @return [User]
-  delegate :find_by, :create!, to: :gateway
+  # @!method find_or_create_by!(attributes)
+  #   @param attributes [Hash]
+  #   @return [User]
+  delegate :find_by, :create!, :find_or_create_by!, to: :gateway
+
+  # @param token [String]
+  # @return [User, nil]
+  def find_by_session(token)
+    result = gateway.joins(:sessions).where(sessions: { id: token }).limit(1)
+    return result.first if result.any?
+
+    nil
+  end
 
   private
 

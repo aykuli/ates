@@ -11,5 +11,5 @@ class BillingEvent < ApplicationRecord
 
   # @!method state
   #   @return [AccountState]
-  belongs_to :account_state
+  belongs_to :state, class_name: 'AccountState'
 end

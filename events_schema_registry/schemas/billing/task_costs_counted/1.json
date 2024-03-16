@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "billing.withdrawn.v1",
-  "description": "json schema for money withdrawn event from the user's account (version 1)",
+  "title": "billing.task_costs_counted.v1",
+  "description": "json schema for task costs counted event for task (version 1)",
   "type": "object",
 
   "properties": {
@@ -18,12 +18,11 @@
     "event_data": {
       "type": "object",
       "properties": {
-        "task_public_uid": { "type": "string" },
-        "user_public_uid": { "type": "string" },
-        "cost":            { "type": "number" },
-        "created_at":      { "type": "string" }
+        "task_public_uid":   { "type": "string" },
+        "task_assign_cost":  { "type": "number" },
+        "task_solving_cost": { "type": "number" }
       },
-      "required": ["task_public_uid", "user_public_uid", "cost"]
+      "required": ["task_public_uid", "task_assign_cost", "task_solving_cost"]
     }
   },
 

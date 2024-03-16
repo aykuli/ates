@@ -32,6 +32,8 @@ class CreateInitTables < ActiveRecord::Migration[7.1]
       t.uuid   :public_uid,      null: false
       t.uuid   :user_public_uid, null: false
       t.string :state,           null: false
+      t.string :title
+      t.string :jira_id
       t.float  :assign_cost
       t.float  :solving_cost
 

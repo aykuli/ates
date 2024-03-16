@@ -16,50 +16,69 @@ class BillingsProducer
   #   @return [Recorder::Agent]
   # resolve :logger
 
+  # @param billing_event [BillingEvent]
+  def produce_async(event_name, billing_event, version: 1)
+    data = {
+      task_public_uid: billing_event.task.public_uid,
+      task_assign_cost: billing_event.task.assign_cost,
+      task_solving_cost: billing_event.task.solving_cost
+    }
+
+    event = build_event(event_name, data).merge(event_version: version)
+    valid = validator.valid?(event, "#{SCHEMA_NAME}.#{event_name}", version:)
+
+    produce(event) if valid
+  end
 
   # @param billing_events [Array<BillingEvent>]
   def produce_many_async(billing_events, version: 1)
-    byebug
-
     valid = false
     events = billing_events.map do |be|
-      event = build_event(be).merge(event_version: version)
+      event = build_event(be.state.code, prepare(be)).merge(event_version: version)
       valid = validator.valid?(event, "#{SCHEMA_NAME}.#{be.state.code}", version:)
 
       return event if valid
 
       break
     end
-    byebug
+
     produce_many(events) if valid
-
-
   end
-
 
   private
 
-  # @param events [Array<Hash>]
+  # @param event [Hash]
   # @raise        [Rdkafka::RdkafkaError]
   # @raise        [WaterDrop::Errors::MessageInvalidError]
   # @return       [Rdkafka::Producer::DeliveryHandle]
-  def produce_many(events)
-    Karafka.producer.produce_many_async(events.map { { topic: TOPIC, payload: _1.to_json } })
+  def produce(event)
+    Karafka.producer.produce_async(topic: TOPIC, payload: event.to_json)
   rescue e
     # logger.error(message: e.message, producer: PRODUCER, payload: events.to_s)
   end
 
-  # @param billing_event [BillingEvent]
-  # @return              [Hash]
-  def build_event(billing_event)
-    event_name = billing_event.state.code
-    byebug
+  # @param events [Array<Hash>]
+  # @raise        [Rdkafka::RdkafkaError]
+  # @raise        [WaterDrop::Errors::MessageInvalidError]
+  # @return       [Array<Rdkafka::Producer::DeliveryHandle>]
+  def produce_many(events)
+    events_with_topic = events.map { { topic: TOPIC, payload: _1.to_json } }
+
+    Karafka.producer.produce_many_async(events_with_topic)
+  rescue e
+    # logger.error(message: e.message, producer: PRODUCER, payload: events.to_s)
+  end
+
+  # @param event_name [String]
+  # @param data       [Hash]
+  # @return           [Hash]
+  def build_event(event_name, data)
     {
       event_name: "#{SCHEMA_NAME}.#{event_name}",
       event_uid: SecureRandom.uuid,
       event_time: Time.zone.now.to_s,
       producer: PRODUCER,
-      data: prepare(billing_event)
+      data:
     }
   end
 
@@ -70,7 +89,7 @@ class BillingsProducer
       cost: billing_event.cost,
       user_public_uid: billing_event.user.public_uid,
       task_public_uid: billing_event.task.public_uid,
-      created_at: billing_event.created_at
+      created_at: billing_event.created_at.to_s
     }
   end
 end

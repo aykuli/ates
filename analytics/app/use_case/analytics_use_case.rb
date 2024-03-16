@@ -8,9 +8,6 @@ class AnalyticsUseCase
   # @!attribute [r] users_repository
   #   @return [UsersRepository]
   resolve :users_repository
-  # @!attribute [r] done_tasks_repository
-  #   @return [DoneTasksRepository]
-  resolve :done_tasks_repository
   # @!attribute [r] balances_repository
   #   @return [BalancesRepository]
   resolve :balances_repository

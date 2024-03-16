@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_10_115653) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_16_102900) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -23,17 +23,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_10_115653) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "done_tasks", force: :cascade do |t|
-    t.uuid "public_uid", null: false
-    t.float "cost"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "refresh_token"
     t.integer "expires_in"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "tasks", force: :cascade do |t|
+    t.uuid "public_uid", null: false
+    t.uuid "user_public_uid", null: false
+    t.string "state", null: false
+    t.string "title"
+    t.string "jira_id"
+    t.float "assign_cost"
+    t.float "solving_cost"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

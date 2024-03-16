@@ -22,12 +22,12 @@ class CreateInitTables < ActiveRecord::Migration[7.1]
     add_foreign_key :sessions, :users, column: :user_id, name: :sessions_user_fkey
 
     create_table :tasks do |t|
-      t.uuid    :public_uid
-      t.integer :user_public_uid
+      t.uuid    :public_uid,      null: false
+      t.integer :user_public_uid, null: false
+      t.string  :state,           null: false
       t.string  :title
-      t.float   :assign_cost,   null: false
-      t.float   :solving_cost,  null: false
-      t.string  :state,         null: false
+      t.float   :assign_cost
+      t.float   :solving_cost
     end
     add_index :tasks, :public_uid, unique: true, name: :tasks_public_id_key
 

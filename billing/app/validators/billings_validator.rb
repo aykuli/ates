@@ -7,7 +7,7 @@ class BillingsValidator
 
   # @!method logger
   #   @return [Recorder::Agent]
-  resolve :logger
+  # resolve :logger
 
   # @param event   [Hash]
   # @param type    [String]
@@ -17,7 +17,7 @@ class BillingsValidator
     validation = schema_registry.validate_event(event, type, version:)
     return true if validation.success?
 
-    logger.error(message: validation.result.join(':'), producer: "BillingValidator.valid?", payload: event.to_s)
+    # logger.error(message: validation.result.join(':'), producer: "BillingValidator.valid?", payload: event.to_s)
 
     false
   end

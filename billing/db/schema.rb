@@ -24,7 +24,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_16_102900) do
     t.enum "code", null: false, enum_type: "state_code"
   end
 
-  create_table "BilingEvents", force: :cascade do |t|
+  create_table "billing_events", force: :cascade do |t|
     t.uuid "public_uid", default: -> { "gen_random_uuid()" }, null: false
     t.integer "state_id", null: false
     t.integer "user_id", null: false
@@ -43,12 +43,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_16_102900) do
   end
 
   create_table "tasks", force: :cascade do |t|
-    t.uuid "public_uid"
-    t.integer "user_public_uid"
-    t.string "title"
-    t.float "assign_cost", null: false
-    t.float "solving_cost", null: false
+    t.uuid "public_uid", null: false
+    t.integer "user_public_uid", null: false
     t.string "state", null: false
+    t.string "title"
+    t.float "assign_cost"
+    t.float "solving_cost"
     t.string "jira_id"
     t.index ["public_uid"], name: "tasks_public_id_key", unique: true
   end
@@ -63,8 +63,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_16_102900) do
     t.index ["public_uid"], name: "users_public_uid_key", unique: true
   end
 
-  add_foreign_key "BilingEvents", "account_states", column: "state_id", name: "events_states_fkey"
-  add_foreign_key "BilingEvents", "tasks", name: "event_task_fkey"
-  add_foreign_key "BilingEvents", "users", name: "event_users_fkey"
+  add_foreign_key "billing_events", "account_states", column: "state_id", name: "events_states_fkey"
+  add_foreign_key "billing_events", "tasks", name: "event_task_fkey"
+  add_foreign_key "billing_events", "users", name: "event_users_fkey"
   add_foreign_key "sessions", "users", name: "sessions_user_fkey"
 end

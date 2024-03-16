@@ -16,11 +16,7 @@ class SummarizeUsersBalanceWorker
   resolve :states_repository
 
   def perform
-    byebug
-
     users = users_repository.all
-    byebug
-
     users.find_each do
       todays_sum = count_day_earn(_1)
 
@@ -43,15 +39,12 @@ class SummarizeUsersBalanceWorker
 
   # @param user [User]
   def count_day_earn(user)
-    byebug
     sum = 0
     yesterday_sent_event = events_repository.where(user_id: user.id,
                                                    state_id: states_repository.find_by(code: AccountStates::SENT).id, created_at: Time.zone.now.yesterday)
-    byebug
     if yesterday_sent_event.nil?
       yesterday_summarize_event = events_repository.where(user_id: user.id,
                                                           state_id: states_repository.find_by(code: AccountStates::SUMMARIZED).id, created_at: Time.zone.now.yesterday)
-      byebug
       sum = yesterday_summarize_event.cost
     end
 

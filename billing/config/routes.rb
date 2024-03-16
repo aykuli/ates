@@ -5,5 +5,5 @@ Rails.application.routes.draw do
   get "/login", to: 'sessions#new'
   post "logout", to: 'sessions#destroy'
 
-  root to: "events#index"
+  root to: "billing_events#index"
 end

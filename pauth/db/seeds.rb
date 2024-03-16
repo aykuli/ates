@@ -16,3 +16,4 @@ p4.update!(password: 'password123', password_confirmation: 'password123')
 
 Doorkeeper::Application.find_or_create_by!(name: 'Tasks',   redirect_uri: 'http://localhost:3001/auth/ates/callback')
 Doorkeeper::Application.find_or_create_by!(name: 'Billing', redirect_uri: 'http://localhost:3002/auth/ates/callback')
+Doorkeeper::Application.find_or_create_by!(name: 'Analytics', redirect_uri: 'http://localhost:3003/auth/ates/callback')

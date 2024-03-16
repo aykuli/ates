@@ -7,7 +7,6 @@ class TasksConsumer < ApplicationConsumer
   #   @return [TasksUseCase]
   resolve :tasks_use_case
 
-  # rubocop:disable Metrics/AbcSize
   def consume
     messages.each do |message|
       task_data = take_task_from(message)
@@ -16,18 +15,15 @@ class TasksConsumer < ApplicationConsumer
       when ['task.created', 2]
         tasks_use_case.create(task_data)
 
-      when ['task.assigned', 2]
+      when ['task.assigned', 1]
         tasks_use_case.update(task_data)
-
       when ['task.reassigned', 1]
         tasks_use_case.update(task_data)
-
       when ['task.completed', 1]
         tasks_use_case.update(task_data)
       end
     end
   end
-  # rubocop:enable Metrics/AbcSize
 
   private
 

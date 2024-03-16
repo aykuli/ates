@@ -10,7 +10,7 @@ class UsersUseCase
   resolve :users_repository
   # @!method logger
   #   @return [Recorder::Agent]
-  resolve :logger
+  # resolve :logger
 
   # @param user_data [Hash]
   def create(user_data)
@@ -19,9 +19,9 @@ class UsersUseCase
 
     user.update!(**user_data)
 
-    logger.info(message: 'User was created',
-                producer: "UsersUseCase.create",
-                payload: user_data.to_s)
+    # logger.info(message: 'User was created',
+    #             producer: "UsersUseCase.create",
+    #             payload: user_data.to_s)
   end
 
   # @param user_data [Hash]
@@ -31,8 +31,8 @@ class UsersUseCase
 
     user.update!(**user_data)
 
-    logger.info(message: 'User was updated',
-                producer: "UsersUseCase.update",
-                payload: user_data.to_s)
+    # logger.info(message: 'User was updated',
+    #             producer: "UsersUseCase.update",
+    #             payload: user_data.to_s)
   end
 end

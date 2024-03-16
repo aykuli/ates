@@ -2,8 +2,8 @@
 
 class KarafkaApp < Karafka::App
   setup do |config|
-    config.kafka = { 'bootstrap.servers': 'localhost:9092' }
-    config.client_id = 'tasks_service'
+    config.kafka = { 'bootstrap.servers': Settings.kafka.host }
+    config.client_id = 'billings_service'
     config.consumer_persistence = !Rails.env.development?
   end
 

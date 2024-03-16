@@ -24,7 +24,7 @@ class TasksProducer
   # @raise            [WaterDrop::Errors::MessageInvalidError]
   # @return           [Rdkafka::Producer::DeliveryHandle]
   def produce_async(task, task_event, version: 1)
-    event = build_event(task.state.code, prepare(task)).merge(event_version: version)
+    event = build_event(task_event, prepare(task)).merge(event_version: version)
     valid = validator.valid?(event, "#{SCHEMA_NAME}.#{task_event}", version:)
 
     produce(event) if valid

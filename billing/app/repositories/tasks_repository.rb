@@ -8,20 +8,25 @@ class TasksRepository
   # @!method find_by!(attributes)
   #   @param attributes [Hash]
   #   @return           [Task]
-  delegate :find_by, to: :gateway
+  # @!method create!(attributes)
+  #   @param attributes [Hash]
+  #   @return           [Task]
+  delegate :find_by, :create!, to: :gateway
 
-  # @param data [Hash]
-  #   @key task_public_uid      [String]
-  #   @key assignee_public_uid  [String]
-  #   @key task_title           [String]
-  #   @key jira_id              [String]
+  # @param task_data        [Hash]
+  #   @key task_public_uid  [String]
+  #   @key user_public_uid  [String]
+  #   @key task_title       [String]
+  #   @key jira_id          [String]
+  #   @key state            [String]
   # @return [Task]
-  def create_as_consumer!(data)
+  def create_as_consumer!(task_data)
     gateway.create!(
-      public_uid: data[:task_public_uid],
-      assig: data[:assignee_public_uid],
-      title: data[:task_title],
-      jira_id: data[:task_title]
+      user_public_uid: task_data[:user_public_uid],
+      public_uid: task_data[:public_uid],
+      title: task_data[:title],
+      jira_id: task_data[:jira_id],
+      state: 'created'
     )
   end
 

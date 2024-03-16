@@ -22,6 +22,7 @@ class TasksController < ApplicationController
     else
       task = result.payload
       produce_next = tasks_producer.produce_async(task, States::CREATED, version: 2)
+
       if produce_next
         tasks_producer.produce_async(task, States::ASSIGNED)
       else
