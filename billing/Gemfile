@@ -43,3 +43,6 @@ gem "schema_registry", "~> 1", :path => "../events_schema_registry/ruby/"
 gem "sidekiq", "~> 7.2"
 
 gem "sidekiq-scheduler", "~> 5.0"
+
+# https://github.com/shlima/click_house
+gem "click_house", "~> 2.1"

@@ -1,4 +1,4 @@
-class CreateClickhouseTables < ActiveRecord::Migration[7.1]
+class CreateClickhouseLogTable < ActiveRecord::Migration[7.1]
   ClickHouse.connection.create_table(:logs,
                                      if_not_exists: true,
                                      ttl: 'created_at + INTERVAL 2 MONTH',
@@ -8,6 +8,6 @@ class CreateClickhouseTables < ActiveRecord::Migration[7.1]
     t.String   :message
     t.String   :producer, default: nil
     t.String   :level
-    t.JSON     :payload
+    t.String   :payload
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Task < ApplicationRecord
-  # @!method assignee
+  # @!method user
   #   @return [ActiveRecord::Associations::CollectionProxy<Session>]
-  has_one :assignee, class_name: "User", foreign_key: :assignee_id
+  has_one :user, class_name: 'User', foreign_key: :user_public_uuid, inverse_of: :public_uuid
 end

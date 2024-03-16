@@ -1,12 +1,18 @@
 # Tasks service
 
-Run service
+## Run service
 
 ``
 rails s -p 3001
 
 bundle exec karafka server
 ``
+
+## Run tests
+
+```shell
+bundle exec rspec
+```
 
 ## Внедрение новой версии вида события о задаче
 

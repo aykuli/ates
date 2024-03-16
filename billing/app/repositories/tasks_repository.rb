@@ -21,9 +21,9 @@ class TasksRepository
       public_uid: data[:task_public_uid],
       assig: data[:assignee_public_uid],
       title: data[:task_title],
-      jira_id:data[:task_title]    )
+      jira_id: data[:task_title]
+    )
   end
-
 
   private
 

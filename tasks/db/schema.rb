@@ -17,7 +17,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_09_170414) do
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
-  create_enum "state_code", ["created", "assigned", "reassigned", "done"]
+  create_enum "state_code", ["created", "assigned", "reassigned", "completed"]
 
   create_table "events", force: :cascade do |t|
     t.integer "task_id", null: false

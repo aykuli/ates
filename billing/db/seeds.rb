@@ -1,7 +1,7 @@
-State.find_or_create_by!(code: States::EARNED,     title: "заработано")
-State.find_or_create_by!(code: States::DEDUCTED,   title: "вычтено")
-State.find_or_create_by!(code: States::SUMMARIZED, title: "подытожено")
-State.find_or_create_by!(code: States::SENT,       title: "деньги отправлены")
+AccountState.find_or_create_by!(code: AccountStates::DEPOSITED, title: "внесено")
+AccountState.find_or_create_by!(code: AccountStates::WITHDRAWN, title: "вычтено")
+AccountState.find_or_create_by!(code: AccountStates::SUMMARIZED, title: "подытожено")
+AccountState.find_or_create_by!(code: AccountStates::SENT, title: "деньги отправлены")
 
 
 # uid is the same as public_id in oauth service for dev purpose

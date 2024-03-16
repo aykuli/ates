@@ -5,20 +5,21 @@ class TasksProducer
 
   register initialize: true, memoize: true
 
-  # @!method logger
+  TOPIC = 'tasks-streaming'
+  PRODUCER = 'tasks-service'
+  SCHEMA_NAME = 'task-lifecycle'
+
+  # @!method validator
   #   @return [TasksValidator]
   resolve :tasks_validator, as: :validator
   # @!method logger
   #   @return [Recorder::Agent]
   resolve :logger
 
-  TOPIC = 'tasks-streaming'
-  PRODUCER = 'tasks-service'
-  SCHEMA_NAME = 'task'
-
   # @param task       [Task]
   # @param task_event [String]
   # @param version    [Integer]
+  # @return           [Boolean]
   # @raise            [Rdkafka::RdkafkaError]
   # @raise            [WaterDrop::Errors::MessageInvalidError]
   # @return           [Rdkafka::Producer::DeliveryHandle]
@@ -27,6 +28,8 @@ class TasksProducer
     valid = validator.valid?(event, "#{SCHEMA_NAME}.#{task_event}", version:)
 
     produce(event) if valid
+
+    valid
   end
 
   # @param tasks      [Array<Task>]
@@ -49,8 +52,8 @@ class TasksProducer
   # @return        [Rdkafka::Producer::DeliveryHandle]
   def produce(payload)
     Karafka.producer.produce_async(topic: TOPIC, payload: payload.to_json)
-  rescue StandardError => e
-    logger.error(message: e.message, producer: PRODUCER, payload: events.to_json)
+  rescue e
+    logger.error(message: e.message, producer: PRODUCER, payload: events.to_s)
   end
 
   # @param events [Array<Hash>]
@@ -59,8 +62,8 @@ class TasksProducer
   # @return       [Array<Rdkafka::Producer::DeliveryHandle>]
   def produce_many(events)
     Karafka.producer.produce_many_async(events.map { { topic: TOPIC, payload: _1.to_json } })
-  rescue StandardError => e
-    logger.error(message: e.message, producer: PRODUCER, payload: events.to_json)
+  rescue e
+    logger.error(message: e.message, producer: PRODUCER, payload: events.to_s)
   end
 
   # @param task_event [String]
@@ -81,9 +84,9 @@ class TasksProducer
   def prepare(task)
     {
       task_public_uid: task.public_uid,
-      user_public_uid: task.assignee.public_uid,
+      user_public_uid: task.assignee&.public_uid,
       task_title: task.title,
-      jira_id: task.jira_id
+      task_jira_id: task.jira_id
     }
   end
 end

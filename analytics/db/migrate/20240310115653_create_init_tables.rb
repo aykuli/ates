@@ -28,9 +28,12 @@ class CreateInitTables < ActiveRecord::Migration[7.1]
       t.timestamps
     end
 
-    create_table :done_tasks do |t|
-      t.uuid   :public_uid,  null: false
-      t.float :cost
+    create_table :tasks do |t|
+      t.uuid   :public_uid,      null: false
+      t.uuid   :user_public_uid, null: false
+      t.string :state,           null: false
+      t.float  :assign_cost
+      t.float  :solving_cost
 
       t.timestamps
     end

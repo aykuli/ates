@@ -23,21 +23,21 @@ class CreateInitTables < ActiveRecord::Migration[7.1]
 
     create_table :tasks do |t|
       t.uuid    :public_uid
-      t.integer :assignee_id
+      t.integer :user_public_uid
       t.string  :title
-      t.string  :jira_id
       t.float   :assign_cost,   null: false
       t.float   :solving_cost,  null: false
+      t.string  :state,         null: false
     end
     add_index :tasks, :public_uid, unique: true, name: :tasks_public_id_key
 
-    create_enum  :state_code, %i[earned deducted summarized]
-    create_table :states do |t|
+    create_enum  :state_code, %i[deposited withdrawn summarized sent]
+    create_table :account_states do |t|
       t.string   :title,                        null: false
       t.enum     :code, enum_type: :state_code, null: false
     end
     
-    create_table :events do |t|
+    create_table :billing_events do |t|
       t.uuid     :public_uid,   null: false, default: 'gen_random_uuid()'
       t.integer  :state_id,     null: false
       t.integer  :user_id,      null: false
@@ -46,8 +46,8 @@ class CreateInitTables < ActiveRecord::Migration[7.1]
 
       t.timestamps
     end
-    add_foreign_key :events, :users, column: :user_id,  name: :event_users_fkey
-    add_foreign_key :events, :states,column: :state_id, name: :events_states_fkey
-    add_foreign_key :events, :tasks, column: :task_id,  name: :event_task_fkey
+    add_foreign_key :billing_events, :users, column: :user_id, name: :event_users_fkey
+    add_foreign_key :billing_events, :account_states, column: :state_id, name: :events_states_fkey
+    add_foreign_key :billing_events, :tasks, column: :task_id, name: :event_task_fkey
   end
 end

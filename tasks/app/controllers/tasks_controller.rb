@@ -12,15 +12,22 @@ class TasksController < ApplicationController
     @errors = session[:errors]
   end
 
-  def create
-    result = tasks_use_case.create!(params, current_user)
+  def create # rubocop:disable Metrics/AbcSize
+    result = tasks_use_case.create_the_assign!(params, current_user)
 
     if result.failed?
       session[:errors] = result.errors
 
       redirect_to tasks_error_path
     else
-      tasks_producer.produce_async(result.payload, States::CREATED, version: 2)
+      task = result.payload
+      produce_next = tasks_producer.produce_async(task, States::CREATED, version: 2)
+      if produce_next
+        tasks_producer.produce_async(task, States::ASSIGNED)
+      else
+        session[:errors] =
+          "Billing dont know who is the assignee of task with id = #{task.id} with public_id = #{task.public_uuid}"
+      end
 
       redirect_to root_path
     end
@@ -29,7 +36,7 @@ class TasksController < ApplicationController
   def reassign
     result = tasks_use_case.reassign!(current_user)
 
-    tasks_producer.produce_many_async(result.payload, States::REASSIGNED, version: 1)
+    tasks_producer.produce_many_async(result.payload, States::REASSIGNED)
 
     redirect_to root_path
   end
@@ -42,7 +49,7 @@ class TasksController < ApplicationController
 
       redirect_to tasks_error_path
     else
-      tasks_producer.produce_async(result.payload, States::COMPLETED, version: 1)
+      tasks_producer.produce_async(result.payload, States::COMPLETED)
     end
 
     redirect_to root_path

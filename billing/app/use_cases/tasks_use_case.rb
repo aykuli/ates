@@ -16,106 +16,137 @@ class TasksUseCase
   resolve :tasks_repository, as: :repository
   # @!attribute [r] producer
   #   @return [BillingsProducer]
-  resolve :producer
+  resolve :billings_producer, as: :producer
+  # @!method logger
+  #   @return [Recorder::Agent]
+  # resolve :logger
 
-
-  # @param task_data            [Hash]
-  #   @key task_public_uid      [String]
-  #   @key assignee_public_uid  [String]
-  #   @key task_title           [String]
-  #   @key jira_id              [String]
-  # @return [Task]
-  def assign_payments(task_data)
-    assignee = users_repository.find_by(public_uid: task_data[:assignee_public_uid])
-
-    return unless assignee # todo write log
-
-    task =  repository.create!(
+  # @param task_data        [Hash]
+  #   @key task_public_uid  [String]
+  #   @key user_public_uid  [String]
+  #   @key task_title       [String]
+  #   @key jira_id          [String]
+  #   @key state            [String]
+  def create!(task_data)
+    repository.create!(
       public_uid: task_data[:task_public_uid],
-      assignee_id: assignee.id,
       title: task_data[:task_title],
-      jira_id:task_data[:task_title],
-    assign_cost: rand(10..20), solving_cost: rand(20..40))
+      jira_id: task_data[:jira_id],
+      state: 'created'
+    )
 
-    charge_assigned_task!(task)
-
-    producer.produce_async(BillingsProducer::MANAGEMENT_EARN_EVENT, {
-      cost: task.assign_cost,
-      assignee_public_uid: task_data[:assignee_public_uid]
-    })
-
+    # logger.info(message: 'Task was created',
+    #             producer: "TasksUseCase.create",
+    #             payload: task_data.to_s)
   end
 
+  # @param task_data        [Hash]
+  #   @key task_public_uid  [String]
+  #   @key user_public_uid  [String]
+  #   @key task_title       [String]
+  #   @key jira_id          [String]
+  #   @key state            [String]
+  def charge_payments(task_data)
+    task = repository.find_by(public_uid: task_data[:public_uid])
+    task = create!(task_data) unless task
 
-  # @param task_data            [Hash]
-  #   @key task_public_uid      [String]
-  #   @key assignee_public_uid  [String]
-  #   @key task_title           [String]
-  #   @key jira_id              [String]
-  def reassign_payments(task_data)
+    user = users_repository.find_by(public_uid: task_data[:user_public_uid])
+    unless user
+      # logger.error(message: 'No user with such public_uuid while charge payments',
+      #              producer: "TasksUseCase.charge_payments",
+      #              payload: task_data.to_s)
+      return nil
+    end
+
+    task.update!(
+      assign_cost: rand(10..20),
+      solving_cost: rand(20..40),
+      user_public_uid: task_data[:user_public_uid],
+      state: 'assigned')
+
+    charge_task_assign_cost!(task, user)
+  end
+
+  # @param task_data        [Hash]
+  #   @key task_public_uid  [String]
+  #   @key user_public_uid  [String]
+  #   @key task_title       [String]
+  #   @key jira_id          [String]
+  def recharge_payments(task_data)
+    task = repository.find_by(public_uid: task_data[:task_public_uid])
+    unless task
+      # logger.error(message: 'No task with such public_uuid while recharge payments',
+      #              producer: "TasksUseCase.recharge_payments",
+      #              payload: task_data.to_s)
+      return nil
+    end
+
+    user = users_repository.find_by(public_uid: task_data[:user_public_uid])
+    unless user
+      # logger.error(message: 'No user with such public_uuid while recharge payments',
+      #              producer: "TasksUseCase.recharge_payments",
+      #              payload: task_data.to_s)
+      return nil
+    end
+
+    charge_task_assign_cost!(task,user)
+  end
+
+  # @param task_data        [Hash]
+  #   @key task_public_uid  [String]
+  #   @key user_public_uid  [String]
+  #   @key task_title       [String]
+  #   @key jira_id          [String]
+  def pay_for_completed_task(task_data)
     task = repository.find_by(public_uid: task_data[:task_public_uid])
 
-    charge_assigned_task!(task)
+    unless task
+      # logger.error(message: 'No task with such public_uuid while pay_for_completed_task',
+      #              producer: "TasksUseCase.pay_for_completed_task",
+      #              payload: task_data.to_s)
+      return nil
+    end
+    user = users_repository.find_by(public_uid: task_data[:user_public_uid])
 
-    producer.produce_async(BillingsProducer::MANAGEMENT_EARN_EVENT, {
-      cost: task.assign_cost,
-      assignee_public_uid: task.assignee.public_uid,
-    })
+    charge_completed_task!(task, user)
   end
-
-
-  # @param task_data            [Hash]
-  #   @key task_public_uid      [String]
-  #   @key assignee_public_uid  [String]
-  #   @key task_title           [String]
-  #   @key jira_id              [String]
-  def pay_done_task(task_data)
-    task = repository.find_by(public_uid: task_data[:task_public_uid])
-
-    charge_done_task!(task)
-
-
-    producer.produce_async(BillingsProducer::MANAGEMENT_DEDUCTED_EVENT, {
-      cost: task.solving_cost,
-      assignee_public_uid: task.assignee.public_uid
-    })
-  end
-
 
   private
 
-
   # @param task  [Task]
-  def charge_assigned_task!(task)
-    top_management  = users_repository.find_by(admin: true)
-
+  def charge_task_assign_cost!(task,user)
+    top_management = users_repository.find_by(admin: true)
 
     ActiveRecord::Base.transaction do
-      create_event!(task.assignee,       code: States::DEDUCTED, task:, cost: task.assign_cost)
-      create_event!(top_management, code: States::EARNED,   task:, cost: task.assign_cost)
+      create_event!(task, code: AccountStates::WITHDRAWN, cost: task.assign_cost, user:)
+      create_event!(task, code: AccountStates::DEPOSITED, cost: task.assign_cost, user: top_management)
     end
-  end
 
+    producer.produce_many_async(events)
+  end
 
   # @param task [TaskCost]
-  def charge_done_task!(task)
-    top_management  = users_repository.find_by(admin: true)
+  def charge_completed_task!(task,user)
+    top_management = users_repository.find_by(admin: true)
 
+    events = []
     ActiveRecord::Base.transaction do
-      create_event!(task.assignee,  code: States::EARNED,   task:, cost: task.solving_cost)
-      create_event!(top_management, code: States::DEDUCTED, task:, cost: task.solving_cost)
+      events << create_event!(task, code: AccountStates::WITHDRAWN, cost: task.solving_cost, user: top_management)
+      events << create_event!(task, code: AccountStates::DEPOSITED, cost: task.solving_cost, user:)
     end
+
+    producer.produce_many_async(events)
   end
 
-  # @param task       [Task]
-  # @param state_code [String]
-  #   @key user       [User]
-  #   @key assignee   [User]
-  def create_event(task, state_code, user:, assignee: nil)
+  # @param task [Task]
+  # @param code [String]
+  # @param cost [Float]
+  # @param user [User]
+  def create_event!(task, code:, cost:, user:)
     task.events.create!(
-      state: states_repository.find_by(code: state_code),
+      state: states_repository.find_by(code:),
       user_id: user.id,
-      assignee_id: assignee&.id
+      cost: cost
     )
   end
 end

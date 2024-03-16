@@ -30,7 +30,7 @@ class CreateInitialTables < ActiveRecord::Migration[7.1]
       t.timestamps
     end
 
-    create_enum   :state_code, %i[created assigned reassigned done]
+    create_enum   :state_code, %i[created assigned reassigned completed]
     create_table  :states do |t|
       t.string    :title, null: false
       t.enum      :code,  enum_type: :state_code, default: :created

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  # @!method events
-  #   @return [Event]
-  has_many :events, dependent: :restrict_with_exception
+  # @!method BilingEvents
+  #   @return [BillingEvent]
+  has_many :billing_events, dependent: :restrict_with_exception
 
-  # @!method events
+  # @!method BilingEvents
   #   @return [ActiveRecord::Associations::CollectionProxy<Session>]
   has_many :sessions, dependent: :restrict_with_exception
 

@@ -9,8 +9,6 @@ class TasksValidator
   #   @return [Recorder::Agent]
   resolve :logger
 
-  PRODUCER = 'tasks-service'
-
   # @param event   [Hash]
   # @param type    [String]
   # @param version [Integer]
@@ -19,7 +17,7 @@ class TasksValidator
     validation = schema_registry.validate_event(event, type, version:)
     return true if validation.success?
 
-    logger.error(message: validation.result.join(':'), producer: PRODUCER, payload: event.to_json)
+    logger.error(message: validation.result.join(':'), producer: 'TasksValidator.valid?', payload: event.to_s)
 
     false
   end

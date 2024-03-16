@@ -29,7 +29,7 @@ class TasksUseCase
   # @param params [ActionController::Parameters]
   # @param user [User]
   # @return [SuccessCarrier, FailureCarrier]
-  def create!(params, user)
+  def create_the_assign!(params, user)
     attributes = extract_title_jira_id(params)
     return failure(:unprocessable_entity, { message: 'Wrong attributes' }) if attributes.nil?
 

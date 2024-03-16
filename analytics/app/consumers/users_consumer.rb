@@ -7,7 +7,7 @@ class UsersConsumer < ApplicationConsumer
 
   # @!attribute [r] users_use_case
   #   @return [UsersUseCase]
-  resolve :users_use_case, as: :use_case
+  resolve :users_use_case
 
   def consume
     messages.each do |message|
@@ -15,10 +15,10 @@ class UsersConsumer < ApplicationConsumer
 
       case [message.payload['event_name'], message.payload['event_version']]
       when ['user.created', 1]
-        use_case.create_user(user_data)
+        users_use_case.create(user_data)
 
       when ['user.updated', 1]
-        use_case.update_user(user_data)
+        users_use_case.update(user_data)
       end
     end
   end

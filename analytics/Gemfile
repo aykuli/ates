@@ -49,3 +49,6 @@ gem 'omniauth', "~> 1.9.2"
 gem "omniauth-oauth2", "~> 1.7"
 
 gem "karafka", ">= 2.3.0"
+
+# https://github.com/shlima/click_house
+gem "click_house", "~> 2.1"

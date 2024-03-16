@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-class States
-  EARNED      = 'earned'
-  DEDUCTED    = 'deducted'
+class AccountStates
+  DEPOSITED   = 'deposited'
+  WITHDRAWN   = 'withdrawn'
   SUMMARIZED  = 'summarized'
   SENT        = 'sent'
 end
