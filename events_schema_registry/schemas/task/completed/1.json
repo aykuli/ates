@@ -1,12 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "task-lifecycle.assigned.v2",
-  "description": "json schema for task assigned event (version 2)",
+  "title": "task-lifecycle.completed.v1",
+  "description": "json schema for task completed event (version 1)",
   "type": "object",
 
   "properties": {
     "event_uid":     { "type": "string" },
-    "event_version": { "enum": [2] },
+    "event_version": { "enum": [1] },
     "event_name":    { "type": "string" },
     "event_time":    { "type": "string" },
     "producer":      { "type": "string" },
@@ -20,8 +20,7 @@
       "properties": {
         "task_public_uid": { "type": "string" },
         "user_public_uid": { "type": "string" },
-        "task_title":      { "type": "string" },
-        "jira_id":         { "type": "string" }
+        "task_title":      { "type": "string" }
       },
       "required": ["task_public_uid", "user_public_uid"]
     }

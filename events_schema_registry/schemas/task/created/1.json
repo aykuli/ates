@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "task.done.v1",
-  "description": "json schema for task completed event (version 1)",
+  "title": "task-lifecycle.created.v1",
+  "description": "json schema for task created event (version 1)",
   "type": "object",
 
   "properties": {
@@ -18,11 +18,11 @@
     "event_data": {
       "type": "object",
       "properties": {
-        "task_public_uid":      { "type": "string" },
-        "assignee_public_uid":  { "type": "string" },
-        "task_title":           { "type": "string" }
+        "task_public_uid": { "type": "string" },
+        "user_public_uid": { "type": "string" },
+        "task_title":      { "type": "string" }
       },
-      "required": ["task_public_uid", "assignee_public_uid"]
+      "required": ["task_public_uid", "user_public_uid"]
     }
   },
 

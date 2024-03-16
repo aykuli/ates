@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "billing.earned.v1",
-  "description": "json schema for management billing earned event (version 1)",
+  "title": "billing.deposited.v1",
+  "description": "json schema for money deposited event from the user's account (version 1)",
   "type": "object",
 
   "properties": {
@@ -18,13 +18,13 @@
     "event_data": {
       "type": "object",
       "properties": {
-        "task_public_uid":      { "type": "string" },
-        "assignee_public_uid":  { "type": "string" },
-        "cost":                 { "type": "integer" }
+        "task_public_uid": { "type": "string" },
+        "user_public_uid": { "type": "string" },
+        "cost":            { "type": "integer" }
       },
-      "required": ["task_public_uid", "assignee_public_uid", "cost"]
+      "required": ["task_public_uid", "user_public_uid", "cost"]
     }
   },
 
-  "required": ["event_name", "data"]
+  "required": ["event_version", "event_name", "data"]
 }

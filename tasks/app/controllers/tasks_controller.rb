@@ -20,7 +20,7 @@ class TasksController < ApplicationController
 
       redirect_to tasks_error_path
     else
-      tasks_producer.produce_async(result.payload, version: 2)
+      tasks_producer.produce_async(result.payload, States::CREATED, version: 2)
 
       redirect_to root_path
     end
@@ -29,7 +29,7 @@ class TasksController < ApplicationController
   def reassign
     result = tasks_use_case.reassign!(current_user)
 
-    tasks_producer.produce_many_async(result.payload, version: 1)
+    tasks_producer.produce_many_async(result.payload, States::REASSIGNED, version: 1)
 
     redirect_to root_path
   end
@@ -42,7 +42,7 @@ class TasksController < ApplicationController
 
       redirect_to tasks_error_path
     else
-      tasks_producer.produce_async(result.payload, version: 1)
+      tasks_producer.produce_async(result.payload, States::COMPLETED, version: 1)
     end
 
     redirect_to root_path

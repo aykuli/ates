@@ -6,6 +6,9 @@ class TasksProducer
   register initialize: true, memoize: true
 
   # @!method logger
+  #   @return [TasksValidator]
+  resolve :tasks_validator, as: :validator
+  # @!method logger
   #   @return [Recorder::Agent]
   resolve :logger
 
@@ -14,19 +17,16 @@ class TasksProducer
   SCHEMA_NAME = 'task'
 
   # @param task       [Task]
+  # @param task_event [String]
   # @param version    [Integer]
   # @raise            [Rdkafka::RdkafkaError]
   # @raise            [WaterDrop::Errors::MessageInvalidError]
   # @return           [Rdkafka::Producer::DeliveryHandle]
-  def produce_async(task, version: 1)
+  def produce_async(task, task_event, version: 1)
     event = build_event(task.state.code, prepare(task)).merge(event_version: version)
-    result = SchemaRegistry.validate_event(event, "#{SCHEMA_NAME}.#{task.state.code}", version:)
+    valid = validator.valid?(event, "#{SCHEMA_NAME}.#{task_event}", version:)
 
-    if result.success?
-      produce(event)
-    else
-      result.result.each { logger.error(message: _1, producer: PRODUCER) }
-    end
+    produce(event) if valid
   end
 
   # @param tasks      [Array<Task>]
@@ -34,16 +34,11 @@ class TasksProducer
   # @raise            [Rdkafka::RdkafkaError]
   # @raise            [WaterDrop::Errors::MessageInvalidError]
   # @return           [Rdkafka::Producer::DeliveryHandle]
-  def produce_many_async(tasks, version: 1)
-    state_code = tasks[0].state.code
+  def produce_many_async(tasks, task_event, version: 1)
     events = tasks.map { build_event(_1.state.code, prepare(_1)).merge(event_version: version) }
-    result = SchemaRegistry.validate_event(events, "#{SCHEMA_NAME}.#{state_code}", version:)
+    valid = validator.valid?(events, "#{SCHEMA_NAME}.#{task_event}", version:)
 
-    if result.success?
-      produce_many(events)
-    else
-      logger.error(message: result.result.join(':'), producer:PRODUCER, payload: event.to_json)
-    end
+    produce_many(events) if valid
   end
 
   private
@@ -53,11 +48,9 @@ class TasksProducer
   # @raise         [WaterDrop::Errors::MessageInvalidError]
   # @return        [Rdkafka::Producer::DeliveryHandle]
   def produce(payload)
-    begin
-      Karafka.producer.produce_async(topic: TOPIC, payload: payload.to_json)
-    rescue => e
-      logger.error(message: e.message, producer: PRODUCER, payload: events.to_json)
-    end
+    Karafka.producer.produce_async(topic: TOPIC, payload: payload.to_json)
+  rescue StandardError => e
+    logger.error(message: e.message, producer: PRODUCER, payload: events.to_json)
   end
 
   # @param events [Array<Hash>]
@@ -65,19 +58,17 @@ class TasksProducer
   # @raise        [WaterDrop::Errors::MessageInvalidError]
   # @return       [Array<Rdkafka::Producer::DeliveryHandle>]
   def produce_many(events)
-    begin
-      Karafka.producer.produce_many_async(events.map { { topic: TOPIC, payload: _1.to_json } })
-    rescue => e
-      logger.error(message: e.message, producer: PRODUCER, payload: events.to_json)
-    end
+    Karafka.producer.produce_many_async(events.map { { topic: TOPIC, payload: _1.to_json } })
+  rescue StandardError => e
+    logger.error(message: e.message, producer: PRODUCER, payload: events.to_json)
   end
 
-  # @param state_code [String]
+  # @param task_event [String]
   # @param data       [Hash]
   # @return           [Hash]
-  def build_event(state_code, data)
+  def build_event(task_event, data)
     {
-      event_name: "task.#{state_code}",
+      event_name: "task.#{task_event}",
       event_uid: SecureRandom.uuid,
       event_time: Time.zone.now.to_s,
       producer: PRODUCER,
@@ -90,7 +81,7 @@ class TasksProducer
   def prepare(task)
     {
       task_public_uid: task.public_uid,
-      assignee_public_uid: task.assignee.public_uid,
+      user_public_uid: task.assignee.public_uid,
       task_title: task.title,
       jira_id: task.jira_id
     }

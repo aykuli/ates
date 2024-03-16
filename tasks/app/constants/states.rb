@@ -4,5 +4,5 @@ class States
   CREATED     = 'created'
   ASSIGNED    = 'assigned'
   REASSIGNED  = 'reassigned'
-  DONE        = 'done'
+  COMPLETED   = 'completed'
 end
