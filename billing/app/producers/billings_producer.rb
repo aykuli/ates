@@ -14,7 +14,7 @@ class BillingsProducer
   resolve :billings_validator, as: :validator
   # @!method logger
   #   @return [Recorder::Agent]
-  # resolve :logger
+  resolve :logger
 
   # @param task [Task]
   def produce_async(event_name, task, version: 1)
@@ -46,14 +46,14 @@ class BillingsProducer
 
   private
 
-  # @param event [Hash]
+  # @param event  [Hash]
   # @raise        [Rdkafka::RdkafkaError]
   # @raise        [WaterDrop::Errors::MessageInvalidError]
   # @return       [Rdkafka::Producer::DeliveryHandle]
   def produce(event)
     Karafka.producer.produce_async(topic: TOPIC, payload: event.to_json)
   rescue e
-    # logger.error(message: e.message, producer: PRODUCER, payload: events.to_s)
+    logger.error(message: e.message, producer: PRODUCER, payload: events.to_s)
   end
 
   # @param events [Array<Hash>]
@@ -64,7 +64,7 @@ class BillingsProducer
     events_with_topic = events.map { { topic: TOPIC, payload: _1.to_json } }
     Karafka.producer.produce_many_async(events_with_topic)
   rescue e
-    # logger.error(message: e.message, producer: PRODUCER, payload: events.to_s)
+    logger.error(message: e.message, producer: PRODUCER, payload: events.to_s)
   end
 
   # @param event_name [String]

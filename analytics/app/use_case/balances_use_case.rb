@@ -13,7 +13,7 @@ class BalancesUseCase
   resolve :users_repository
   # @!method logger
   #   @return [Recorder::Agent]
-  # resolve :logger
+  resolve :logger
 
   # @param billing_data    [Hash]
   #   @key cost            [Float]
@@ -49,9 +49,9 @@ class BalancesUseCase
     task = tasks_repository.find_by(public_uid: task_costs_data[:task_public_uid])
     return unless task
 
-    # logger.info(message: 'Task was not found to save its assign and solving costs',
-    #             producer: "BalancesUseCase.save_task_costs",
-    #             payload: task_costs_data.to_s) unless task
+    logger.info(message: 'Task was not found to save its assign and solving costs',
+                producer: "BalancesUseCase.save_task_costs",
+                payload: task_costs_data.to_s) unless task
 
     task.update!(
       assign_cost: task_costs_data[:task_assign_cost],

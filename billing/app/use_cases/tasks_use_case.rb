@@ -19,7 +19,7 @@ class TasksUseCase
   resolve :billings_producer, as: :producer
   # @!method logger
   #   @return [Recorder::Agent]
-  # resolve :logger
+  resolve :logger
 
   # @param task_data        [Hash]
   #   @key task_public_uid  [String]
@@ -40,8 +40,8 @@ class TasksUseCase
       state: 'created'
     )
 
-    # logger.info(message: 'Task was created',
-    #             producer: "BillingsUseCase.create",
-    #             payload: task_data.to_s) unless task
+    logger.info(message: 'Task was created',
+                producer: "BillingsUseCase.create",
+                payload: task_data.to_s) unless task
   end
 end

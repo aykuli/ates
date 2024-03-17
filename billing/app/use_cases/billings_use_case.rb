@@ -19,7 +19,7 @@ class BillingsUseCase
   resolve :billings_producer, as: :producer
   # @!method logger
   #   @return [Recorder::Agent]
-  # resolve :logger
+  resolve :logger
 
   # @param task_data        [Hash]
   #   @key task_public_uid  [String]
@@ -34,9 +34,9 @@ class BillingsUseCase
 
     user = users_repository.find_by(public_uid: task_data[:user_public_uid])
     unless user
-      # logger.error(message: 'No user with such public_uuid while charge payments',
-      #              producer: "BillingsUseCase.charge_payments",
-      #              payload: task_data.to_s)
+      logger.error(message: 'No user with such public_uuid while charge payments',
+                   producer: "BillingsUseCase.charge_payments",
+                   payload: task_data.to_s)
       return nil
     end
 
@@ -64,17 +64,17 @@ class BillingsUseCase
   def recharge_payments(task_data)
     task = tasks_repository.find_by(public_uid: task_data[:public_uid])
     unless task
-      # logger.error(message: 'No task with such public_uuid while recharge payments',
-      #              producer: "BillingsUseCase.recharge_payments",
-      #              payload: task_data.to_s)
+      logger.error(message: 'No task with such public_uuid while recharge payments',
+                   producer: "BillingsUseCase.recharge_payments",
+                   payload: task_data.to_s)
       return nil
     end
 
     user = users_repository.find_by(public_uid: task_data[:user_public_uid])
     unless user
-      # logger.error(message: 'No user with such public_uuid while recharge payments',
-      #              producer: "BillingsUseCase.recharge_payments",
-      #              payload: task_data.to_s)
+      logger.error(message: 'No user with such public_uuid while recharge payments',
+                   producer: "BillingsUseCase.recharge_payments",
+                   payload: task_data.to_s)
       return nil
     end
 
@@ -89,9 +89,9 @@ class BillingsUseCase
   def pay_for_completed_task(task_data)
     task = tasks_repository.find_by(public_uid: task_data[:public_uid])
     unless task
-      # logger.error(message: 'No task with such public_uuid while pay_for_completed_task',
-      #              producer: "BillingsUseCase.pay_for_completed_task",
-      #              payload: task_data.to_s)
+      logger.error(message: 'No task with such public_uuid while pay_for_completed_task',
+                   producer: "BillingsUseCase.pay_for_completed_task",
+                   payload: task_data.to_s)
       return nil
     end
 

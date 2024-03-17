@@ -17,8 +17,10 @@ class TasksConsumer < ApplicationConsumer
 
       when ['task.assigned', 1]
         tasks_use_case.update(task_data.merge(state: 'assigned'))
+
       when ['task.reassigned', 1]
         tasks_use_case.update(task_data.merge(state: 'reassigned'))
+
       when ['task.completed', 1]
         tasks_use_case.update(task_data.merge(state: 'completed'))
       end
@@ -30,10 +32,6 @@ class TasksConsumer < ApplicationConsumer
   # @param message          [Hash]
   # @key event_name         [String]
   # @key payload            [Hash]
-  #   @key task_public_uid  [String]
-  #   @key user_public_uid  [String]
-  #   @key task_title       [String]
-  #   @key jira_id          [String]
   def take_task_from(message)
     task_data = message.payload['data']
     {
