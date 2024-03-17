@@ -23,11 +23,13 @@ class CreateInitTables < ActiveRecord::Migration[7.1]
 
     create_table :tasks do |t|
       t.uuid    :public_uid,      null: false
-      t.integer :user_public_uid, null: false
+      t.uuid    :user_public_uid, null: false
       t.string  :state,           null: false
       t.string  :title
       t.float   :assign_cost
       t.float   :solving_cost
+
+      t.timestamps
     end
     add_index :tasks, :public_uid, unique: true, name: :tasks_public_id_key
 

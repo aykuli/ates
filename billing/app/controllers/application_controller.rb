@@ -19,6 +19,6 @@ class ApplicationController < ActionController::Base
   # @return [SessionsRepository]
   def sessions_repository = Rails.configuration.ioc.resolve('sessions_repository')
 
-  # @return [EventsRepository]
-  def events_repository = Rails.configuration.ioc.resolve('events_repository')
+  # @return [BillingEventsRepository]
+  def billing_events_repository = Rails.configuration.ioc.resolve('billing_events_repository')
 end

@@ -25,6 +25,16 @@ class UsersRepository
     nil
   end
 
+  # @return [Integer]
+  def popugs_quantity_in_debt
+    quantity = 0
+    gateway.where(admin: false).find_each do
+      quantity += 1 if _1.current_balance.negative?
+    end
+
+    quantity
+  end
+
   private
 
   # @return [Class<User>]

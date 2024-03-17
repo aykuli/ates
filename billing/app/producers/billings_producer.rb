@@ -16,12 +16,12 @@ class BillingsProducer
   #   @return [Recorder::Agent]
   # resolve :logger
 
-  # @param billing_event [BillingEvent]
-  def produce_async(event_name, billing_event, version: 1)
+  # @param task [Task]
+  def produce_async(event_name, task, version: 1)
     data = {
-      task_public_uid: billing_event.task.public_uid,
-      task_assign_cost: billing_event.task.assign_cost,
-      task_solving_cost: billing_event.task.solving_cost
+      task_public_uid: task.public_uid,
+      task_assign_cost: task.assign_cost,
+      task_solving_cost: task.solving_cost
     }
 
     event = build_event(event_name, data).merge(event_version: version)
@@ -33,13 +33,12 @@ class BillingsProducer
   # @param billing_events [Array<BillingEvent>]
   def produce_many_async(billing_events, version: 1)
     valid = false
-    events = billing_events.map do |be|
+    events = []
+    billing_events.each do |be|
       event = build_event(be.state.code, prepare(be)).merge(event_version: version)
       valid = validator.valid?(event, "#{SCHEMA_NAME}.#{be.state.code}", version:)
 
-      return event if valid
-
-      break
+      events << event if valid
     end
 
     produce_many(events) if valid
@@ -63,7 +62,6 @@ class BillingsProducer
   # @return       [Array<Rdkafka::Producer::DeliveryHandle>]
   def produce_many(events)
     events_with_topic = events.map { { topic: TOPIC, payload: _1.to_json } }
-
     Karafka.producer.produce_many_async(events_with_topic)
   rescue e
     # logger.error(message: e.message, producer: PRODUCER, payload: events.to_s)
@@ -89,7 +87,7 @@ class BillingsProducer
       cost: billing_event.cost,
       user_public_uid: billing_event.user.public_uid,
       task_public_uid: billing_event.task.public_uid,
-      created_at: billing_event.created_at.to_s
+      billing_updated_at: billing_event.created_at.to_s
     }
   end
 end

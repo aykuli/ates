@@ -48,7 +48,7 @@
       <% if @current_user.admin? %> <td> <%= t.assignee.email %> </td> <% end %>
       <% if !@current_user.admin? %>
         <td>
-          <% if t.state.code !=  States::DONE %>
+          <% if t.state.code !=  States::COMPLETED %>
             <%= form_tag tasks_complete_url do %>
               <div>
                 <%= text_field_tag "id", t.id, style: 'display:none'%>

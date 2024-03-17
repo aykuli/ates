@@ -26,13 +26,7 @@ class TasksUseCase
 
     return if task
 
-    repository.create!(
-      public_uid: task_data[:public_uid],
-      title: task_data[:title],
-      jira_id: task_data[:jira_id],
-      user_public_uid: task_data[:user_public_uid],
-      state: 'task.created'
-    )
+    repository.create!(**task_data, state: 'created')
 
     # logger.info(message: 'Task was created',
     #             producer: "TasksUseCase.create",
@@ -47,7 +41,7 @@ class TasksUseCase
   #   @key state            [String]
   def update(task_data)
     task = repository.find_by(public_uid: task_data[:public_uid])
-    task ||= create!(task_data)
+    task ||= create(task_data)
 
     user = users_repository.find_by(public_uid: task_data[:user_public_uid])
     unless user
@@ -57,12 +51,7 @@ class TasksUseCase
       return nil
     end
 
-    task.update!(
-      public_uid: task_data[:public_uid],
-      assign_cost: task_data[:assign_cost],
-      solving_cost: task_data[:solving_cost],
-      state: task_data[:state]
-    )
+    task.update!(**task_data)
 
     # logger.info(message: 'Task was updated',
     #             producer: "TasksUseCase.update",

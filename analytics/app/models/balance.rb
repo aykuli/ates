@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
 class Balance < ApplicationRecord
-  has_one :user
+  # @!method  user
+  #   @return [User]
+  belongs_to :user
 end

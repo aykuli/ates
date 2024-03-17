@@ -27,7 +27,7 @@ class TasksController < ApplicationController
         tasks_producer.produce_async(task, States::ASSIGNED)
       else
         session[:errors] =
-          "Billing dont know who is the assignee of task with id = #{task.id} with public_id = #{task.public_uuid}"
+          "Billing dont know who is the assignee of task with id = #{task.id} with public_id = #{task.public_uid}"
       end
 
       redirect_to root_path

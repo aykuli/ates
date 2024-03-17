@@ -27,6 +27,7 @@ class BillingsUseCase
   #   @key task_title       [String]
   #   @key jira_id          [String]
   #   @key state            [String]
+  #   @key updated_at       [String]
   def charge_payments(task_data)
     task = tasks_repository.find_by(public_uid: task_data[:public_uid])
     task ||= tasks_repository.create_as_consumer!(task_data)
@@ -39,12 +40,18 @@ class BillingsUseCase
       return nil
     end
 
+    return unless task.updated_at != task_data[:updated_at]
+
     task.update!(
       assign_cost: rand(10..20),
       solving_cost: rand(20..40),
       user_public_uid: task_data[:user_public_uid],
+      updated_at: task_data[:updated_at],
       state: 'assigned'
     )
+
+    # share with analytics about task costs
+    producer.produce_async('task_costs_counted', task)
 
     assign_cost_charge!(task, user)
   end
@@ -55,7 +62,7 @@ class BillingsUseCase
   #   @key task_title       [String]
   #   @key jira_id          [String]
   def recharge_payments(task_data)
-    task = tasks_repository.find_by(public_uid: task_data[:task_public_uid])
+    task = tasks_repository.find_by(public_uid: task_data[:public_uid])
     unless task
       # logger.error(message: 'No task with such public_uuid while recharge payments',
       #              producer: "BillingsUseCase.recharge_payments",
@@ -71,17 +78,16 @@ class BillingsUseCase
       return nil
     end
 
-    reassign_cost_charge!(task, user)
+    reassign_cost_charge!(task, user) if task.updated_at != task_data[:updated_at]
   end
 
   # @param task_data        [Hash]
-  #   @key task_public_uid  [String]
+  #   @key public_uid  [String]
   #   @key user_public_uid  [String]
   #   @key task_title       [String]
   #   @key jira_id          [String]
   def pay_for_completed_task(task_data)
-    task = tasks_repository.find_by(public_uid: task_data[:task_public_uid])
-
+    task = tasks_repository.find_by(public_uid: task_data[:public_uid])
     unless task
       # logger.error(message: 'No task with such public_uuid while pay_for_completed_task',
       #              producer: "BillingsUseCase.pay_for_completed_task",
@@ -90,6 +96,15 @@ class BillingsUseCase
     end
 
     user = users_repository.find_by(public_uid: task_data[:user_public_uid])
+
+    return unless task.updated_at != task_data[:updated_at]
+
+    task.update!(
+      user_public_uid: task_data[:user_public_uid],
+      updated_at: task_data[:updated_at],
+      state: 'completed'
+    )
+
     charge_completed_task!(task, user)
   end
 
@@ -107,7 +122,6 @@ class BillingsUseCase
     end
 
     producer.produce_many_async(billing_events)
-    producer.produce_async('task_costs_counted', billing_events.last)
   end
 
   # @param task  [Task]

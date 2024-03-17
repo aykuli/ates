@@ -38,13 +38,15 @@ class SummarizeUsersBalanceWorker
   private
 
   # @param user [User]
-  def count_day_earn(user)
+  def count_day_earn(user) # rubocop:disable Metrics/AbcSize
     sum = 0
-    yesterday_sent_event = events_repository.where(user_id: user.id,
-                                                   state_id: states_repository.find_by(code: AccountStates::SENT).id, created_at: Time.zone.now.yesterday)
+    yesterday_sent_event = events_repository
+                           .where(user_id: user.id,
+                                  state_id: states_repository.find_by(code: AccountStates::SENT).id, created_at: Time.zone.now.yesterday)
     if yesterday_sent_event.nil?
-      yesterday_summarize_event = events_repository.where(user_id: user.id,
-                                                          state_id: states_repository.find_by(code: AccountStates::SUMMARIZED).id, created_at: Time.zone.now.yesterday)
+      yesterday_summarize_event = events_repository
+                                  .where(user_id: user.id,
+                                         state_id: states_repository.find_by(code: AccountStates::SUMMARIZED).id, created_at: Time.zone.now.yesterday)
       sum = yesterday_summarize_event.cost
     end
 
@@ -52,9 +54,9 @@ class SummarizeUsersBalanceWorker
 
     todays_events.find_each do
       case _1.state.code
-      when AccountStates::EARNED
+      when AccountStates::DEPOSITED
         sum += _1.cost
-      when AccountStates::DEDUCTED
+      when AccountStates::WITHDRAWN
         sum -= _1.cost
       end
     end

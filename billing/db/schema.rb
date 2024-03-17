@@ -44,11 +44,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_16_102900) do
 
   create_table "tasks", force: :cascade do |t|
     t.uuid "public_uid", null: false
-    t.integer "user_public_uid", null: false
+    t.uuid "user_public_uid", null: false
     t.string "state", null: false
     t.string "title"
     t.float "assign_cost"
     t.float "solving_cost"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "jira_id"
     t.index ["public_uid"], name: "tasks_public_id_key", unique: true
   end

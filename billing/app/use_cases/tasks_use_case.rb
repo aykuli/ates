@@ -31,11 +31,12 @@ class TasksUseCase
     task = repository.find_by(public_uid: task_data[:public_uid])
     return if task
 
-    repository.create!(
+    repository.create_as_consumer!(
       user_public_uid: task_data[:user_public_uid],
       public_uid: task_data[:public_uid],
       title: task_data[:title],
       jira_id: task_data[:jira_id],
+      updated_at: task_data[:updated_at],
       state: 'created'
     )
 

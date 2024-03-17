@@ -16,6 +16,9 @@ class ApplicationController < ActionController::Base
   # @return [UsersRepository]
   def users_repository = Rails.configuration.ioc.resolve('users_repository')
 
+  # @return [TasksRepository]
+  def tasks_repository = Rails.configuration.ioc.resolve('tasks_repository')
+
   # @return [SessionsRepository]
   def sessions_repository = Rails.configuration.ioc.resolve('sessions_repository')
 end

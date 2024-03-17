@@ -16,7 +16,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_16_102900) do
   enable_extension "plpgsql"
 
   create_table "balances", force: :cascade do |t|
-    t.uuid "user_id", null: false
+    t.integer "user_id", null: false
     t.float "current"
     t.datetime "time"
     t.datetime "created_at", null: false

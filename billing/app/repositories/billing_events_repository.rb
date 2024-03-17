@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class EventsRepository
+class BillingEventsRepository
   include Aux::Pluggable
 
   register initialize: true, memoize: true
@@ -15,9 +15,9 @@ class EventsRepository
   def today_balance(user)
     today_events = gateway.where(user_id: user.id, created_at: Time.zone.now.all_day)
     today_events.inject(0) do |memo, event|
-      if event.state.code == AccountStates::EARNED
+      if event.state.code == AccountStates::DEPOSITED
         memo + event.cost
-      elsif event.state.code == AccountStates::DEDUCTED
+      elsif event.state.code == AccountStates::WITHDRAWN
         memo - event.cost
       else
         memo

@@ -20,7 +20,8 @@
       "properties": {
         "task_public_uid": { "type": "string" },
         "user_public_uid": { "type": "string" },
-        "task_title":      { "type": "string" }
+        "task_title":      { "type": "string" },
+        "task_updated_at":      { "type": "string" }
       },
       "required": ["task_public_uid", "user_public_uid"]
     }

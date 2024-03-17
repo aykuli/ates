@@ -23,12 +23,12 @@
   <% @billing_events.each do |event| %>
     <tr>
       <td><%= event.state.title %></td>
-      <td><%= event.task_cost.task_title %></td>
+      <td><%= event.task.title %></td>
       <td><%= event.cost %></td>
-      <td><%= event.task_cost.assign_cost %></td>
-      <td><%= event.task_cost.solving_cost %></td>
-      <td><%= event.task_cost.task_public_uid %></td>
-      <td><%= event.task_cost.jira_id %></td>
+      <td><%= event.task.assign_cost %></td>
+      <td><%= event.task.solving_cost %></td>
+      <td><%= event.task.public_uid %></td>
+      <td><%= event.task.jira_id %></td>
     </tr>
   <% end %>
   </tbody>

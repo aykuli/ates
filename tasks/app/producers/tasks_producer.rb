@@ -86,7 +86,8 @@ class TasksProducer
       task_public_uid: task.public_uid,
       user_public_uid: task.assignee&.public_uid,
       task_title: task.title,
-      task_jira_id: task.jira_id
+      task_jira_id: task.jira_id,
+      task_updated_at: task.last_event.created_at.to_s
     }
   end
 end

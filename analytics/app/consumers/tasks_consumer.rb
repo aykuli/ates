@@ -13,14 +13,14 @@ class TasksConsumer < ApplicationConsumer
 
       case [message.payload['event_name'], message.payload['event_version']]
       when ['task.created', 2]
-        tasks_use_case.create(task_data)
+        tasks_use_case.create(task_data.merge(state: 'created'))
 
       when ['task.assigned', 1]
-        tasks_use_case.update(task_data)
+        tasks_use_case.update(task_data.merge(state: 'assigned'))
       when ['task.reassigned', 1]
-        tasks_use_case.update(task_data)
+        tasks_use_case.update(task_data.merge(state: 'reassigned'))
       when ['task.completed', 1]
-        tasks_use_case.update(task_data)
+        tasks_use_case.update(task_data.merge(state: 'completed'))
       end
     end
   end
@@ -36,8 +36,6 @@ class TasksConsumer < ApplicationConsumer
   #   @key jira_id          [String]
   def take_task_from(message)
     task_data = message.payload['data']
-    event_name = message.payload['event_name']
-
     {
       public_uid: task_data.delete('task_public_uid'),
       user_public_uid: task_data.delete('user_public_uid'),
@@ -45,7 +43,7 @@ class TasksConsumer < ApplicationConsumer
       jira_id: task_data.delete('task_jira_id'),
       solving_cost: task_data.delete('task_solving_cost'),
       assign_cost: task_data.delete('task_assign_cost'),
-      state: event_name
-    }
+      updated_at: task_data.delete('task_updated_at')
+    }.compact
   end
 end

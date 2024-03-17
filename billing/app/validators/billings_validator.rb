@@ -15,6 +15,7 @@ class BillingsValidator
   # @return        [Boolean]
   def valid?(event, type, version: 1)
     validation = schema_registry.validate_event(event, type, version:)
+
     return true if validation.success?
 
     # logger.error(message: validation.result.join(':'), producer: "BillingValidator.valid?", payload: event.to_s)

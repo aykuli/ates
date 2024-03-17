@@ -21,7 +21,7 @@ class CreateInitTables < ActiveRecord::Migration[7.1]
     add_foreign_key :sessions, :users, column: :user_id, name: :sessions_user_fkey
 
     create_table :balances do |t|
-      t.uuid     :user_id,  null: false
+      t.integer  :user_id,  null: false
       t.float    :current
       t.datetime :time
 

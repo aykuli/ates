@@ -59,7 +59,7 @@ class TasksUseCase
     task = repository.find_by(id: params[:id])
     return failure(:unprocessable_entity, { message: 'No such task' }) unless task
 
-    create_event!(task, States::DONE, user: task.assignee)
+    create_event!(task, States::COMPLETED, user: task.assignee)
 
     success(task)
   end

@@ -24,4 +24,7 @@ ClickHouse.config do |config|
     allow_experimental_object_type: 1,
     input_format_import_nested_json: 1
   }
+
+  config.json_parser = ClickHouse::Middleware::ParseJson
+  config.json_serializer = ClickHouse::Serializer::JsonSerializer
 end

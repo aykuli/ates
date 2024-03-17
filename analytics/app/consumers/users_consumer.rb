@@ -3,8 +3,6 @@
 class UsersConsumer < ApplicationConsumer
   include Aux::Pluggable
 
-  register initialize: true, memoize: true
-
   # @!attribute [r] users_use_case
   #   @return [UsersUseCase]
   resolve :users_use_case

@@ -18,10 +18,10 @@
     "event_data": {
       "type": "object",
       "properties": {
-        "task_public_uid": { "type": "string" },
-        "user_public_uid": { "type": "string" },
-        "cost":            { "type": "integer" },
-        "created_at":      { "type":  "string" }
+        "task_public_uid":    { "type": "string" },
+        "user_public_uid":    { "type": "string" },
+        "cost":               { "type": "number" },
+        "billing_updated_at": { "type":  "string" }
       },
       "required": ["task_public_uid", "user_public_uid", "cost"]
     }

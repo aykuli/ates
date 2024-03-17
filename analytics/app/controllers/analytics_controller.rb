@@ -4,18 +4,11 @@ class AnalyticsController < ApplicationController
   before_action :authenticate
 
   def index
-    @management_balance = 0
-    @popugs_in_debt = 0
-    @costly_tasks = 0
-    @task_costs = []
-    #
-    # @management_balance = use_case.management_current_balance
-    # @popugs_in_debt = use_case.users_in_debt.size
-    # @costly_tasks = use_case.costly_tasks_by_day # TODO: pagination
+    top_management = users_repository.find_by(admin: true)
+    @management_balance = top_management.current_balance
+
+    @popugs_quantity_in_debt = users_repository.popugs_quantity_in_debt
+
+    @tasks = tasks_repository.costly_solved_tasks_by_day # TODO: pagination
   end
-
-  private
-
-  # @return [AnalyticsUseCase]
-  def use_case = Rails.configuration.ioc.resolve('analytics_use_case')
 end

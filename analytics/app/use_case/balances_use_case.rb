@@ -15,20 +15,15 @@ class BalancesUseCase
   #   @return [Recorder::Agent]
   # resolve :logger
 
-  # @param billing_data     [Hash]
-  #   @key cost             [Float]
-  #   @key user_public_uid  [String]
-  #   @key event_time       [String]
+  # @param billing_data    [Hash]
+  #   @key cost            [Float]
+  #   @key user_public_uid [String]
+  #   @key task_public_uid [String]
+  #   @key updated_at      [String]
   def deposited(billing_data)
-    top_management = users_repository.find_by(admin: true)
-    popug          = users_repository.find_by(public_uid: billing_data[:user_public_uid])
-
-    top_management.balance.update!(
-      current: top_management.current + billing_data[:cost],
-      time: billing_data[:event_time]
-    )
-    popug.balance.update!(
-      current: popug.current - billing_data[:cost],
+    user = users_repository.find_by(public_uid: billing_data[:user_public_uid])
+    user.balance_flow.create!(
+      current: user.current_balance + billing_data[:cost],
       time: billing_data[:event_time]
     )
   end
@@ -36,17 +31,12 @@ class BalancesUseCase
   # @param billing_data    [Hash]
   #   @key cost            [Float]
   #   @key user_public_uid [String]
-  #   @key event_time      [String]
+  #   @key task_public_uid [String]
+  #   @key updated_at      [String]
   def withdrawn(billing_data)
-    top_management = users_repository.find_by(admin: true)
-    popug          = users_repository.find_by(public_uid: billing_data[:user_public_uid])
-
-    top_management.balance.update!(
-      current: top_management.current - billing_data[:cost],
-      time: billing_data[:event_time]
-    )
-    popug.balance.update!(
-      current: popug.current + billing_data[:cost],
+    user = users_repository.find_by(public_uid: billing_data[:user_public_uid])
+    user.balance_flow.create!(
+      current: user.current_balance - billing_data[:cost],
       time: billing_data[:event_time]
     )
   end
