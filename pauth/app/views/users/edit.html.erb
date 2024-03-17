@@ -1,0 +1,16 @@
+<h2>Edit user</h2>
+
+<p>Current email: <%= current_user.email %></p>
+<hr />
+
+<%= form_tag update_user_url(current_user) do %>
+  <div>
+    <%= text_field_tag "email", nil, class: "form-control", placeholder: "Enter new email"%>
+
+    <% if current_user.admin? %>
+      <%= select_tag 'role', options_for_select(["popug", "admin"]) %>
+    <% end %>
+
+    <%= submit_tag "Submit" %>
+  </div>
+<% end %>

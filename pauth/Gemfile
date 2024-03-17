@@ -29,6 +29,12 @@ group :development, :test do
   gem "rubocop-rails", "~> 2.24"
 end
 
+gem 'devise', '~> 4.9'
+gem 'doorkeeper', '~> 5.6'
+gem 'omniauth', '~> 2.1'
+
+gem "waterdrop", "~> 2.6"
+
 gem "config", "~> 5.1"
 
 gem "aux", "~> 0.1.1"

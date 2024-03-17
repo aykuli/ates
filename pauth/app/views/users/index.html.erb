@@ -1,0 +1,42 @@
+<h2>Profile page</h2>
+
+<p>You are <b><%= @current_user.email %></b></p>
+<p>
+  <%= link_to "Edit self", edit_user_url(@current_user) %>
+</p>
+
+<% if @current_user.admin? %>
+  <a href="/oauth/applications">applications</a>
+  <br /><br /><br />
+<% end %>
+
+<hr />
+<% if @current_user.admin? %>
+  <h2>Users table</h2>
+  <br /><br />
+<% end %>
+
+<table id="tstyle">
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>public_uid</th>
+      <th>email</th>
+      <th>admin</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each do |u| %>
+      <tr>
+        <td><%= u.id %></td>
+        <td><%= u.public_uid %></td>
+        <td><%= u.email %></td>
+        <td><%= u.admin %></td>
+      </tr>
+      <% end %>
+  </tbody>
+</table>
+<hr />
+
+<!--Rails frontend is EVILLL!!!!-->

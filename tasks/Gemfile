@@ -41,4 +41,13 @@ group :test do
   gem "rspec-rails", "~> 6.1"
 end
 
+# auth
+gem 'omniauth', "~> 1.9.2"
+
+gem "omniauth-oauth2", "~> 1.7"
+
+gem "karafka", ">= 2.3.0"
+
+gem "karafka-web", "~> 0.8.2"
+
 gem "config", "~> 5.1"
