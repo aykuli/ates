@@ -14,13 +14,13 @@ class UsersConsumer < ApplicationConsumer
     messages.each do |message|
       user_data = message.payload['data']
 
-      case message.payload['event_name']
-      when 'user.created'
+      case [message.payload['event_name'], message.payload['event_version']]
+      when ['user.created', 1]
         user = users_repository.create!(**user_data)
         next unless user
 
         user.update!(**user_data)
-      when 'user.updated'
+      when ['user.updated', 1]
         user = users_repository.find_by(public_uid: user_data.delete('public_uid'))
         next unless user
 

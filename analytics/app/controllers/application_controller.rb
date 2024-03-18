@@ -10,11 +10,14 @@ class ApplicationController < ActionController::Base
   def authenticate
     @current_user = users_repository.find_by_session(request.session[:session_id])
 
-    redirect_to login_path unless @current_user
+    redirect_to login_path unless @current_user&.admin?
   end
 
   # @return [UsersRepository]
   def users_repository = Rails.configuration.ioc.resolve('users_repository')
+
+  # @return [TasksRepository]
+  def tasks_repository = Rails.configuration.ioc.resolve('tasks_repository')
 
   # @return [SessionsRepository]
   def sessions_repository = Rails.configuration.ioc.resolve('sessions_repository')

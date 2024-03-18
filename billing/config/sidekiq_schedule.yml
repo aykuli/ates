@@ -1,0 +1,5 @@
+:schedule:
+  summarize_users_balance:
+    cron: '55 23 * * *'
+    class: SummarizeUsersBalanceWorker
+

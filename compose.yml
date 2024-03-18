@@ -25,6 +25,54 @@ services:
     networks:
       - internal
 
+  billing_db:
+    image: postgres:latest
+    container_name: billing_db
+    environment:
+      POSTGRES_DB: ates_billing
+      POSTGRES_USER: ates_billing
+    ports:
+      - 5434:5432
+    volumes:
+      - ./volumes/billing_db:/var/lib/postgresql/data
+    networks:
+      - internal
+
+  analytics_db:
+    image: postgres:latest
+    container_name: analytics_db
+    environment:
+      POSTGRES_DB: ates_analytics
+      POSTGRES_USER: ates_analytics
+    ports:
+      - 5435:5432
+    volumes:
+      - ./volumes/analytics_db:/var/lib/postgresql/data
+    networks:
+      - internal
+      
+  clickhouse:
+    image: clickhouse/clickhouse-server:23.3.8
+    container_name: clickhouse_db
+    environment:
+      CLICKHOUSE_DB: ates_clh
+      CLICKHOUSE_USER: ates_clh
+      CLICKHOUSE_PASSWORD: ates_clh
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    ports:
+      - 8123:8123
+      - 9000:9000
+      - 9009:9009
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 262144
+        hard: 262144
+    volumes:
+      - ./volumes/analytics_clickhouse:/var/lib/clickhouse
+    networks:
+      - internal
+
   kafka:
     container_name: kafka
     image: confluentinc/cp-kafka:7.6.0
@@ -49,7 +97,8 @@ services:
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
       KAFKA_AUTHORIZER_CLASS_NAME: org.apache.kafka.metadata.authorizer.StandardAuthorizer
     volumes:
-      - ./volumes/karafka:/var/lib/kafka/da
+      - ./volumes/karafka:/var/lib/kafka/data
+
 networks:
   internal:
     name: ates

@@ -34,3 +34,15 @@ gem "dry-container", "~> 0.11.0"
 gem "diy-carrierable", "~> 1.0", :github => "diy-rb/diy-carrierable"
 
 gem "aux", "~> 0.1.1"
+
+gem "karafka", "~> 2.3"
+gem "omniauth-oauth2", "~> 1.8"
+gem "omniauth", "~> 2.1"
+gem "schema_registry", "~> 1", :path => "../events_schema_registry/ruby/"
+
+gem "sidekiq", "~> 7.2"
+
+gem "sidekiq-scheduler", "~> 5.0"
+
+# https://github.com/shlima/click_house
+gem "click_house", "~> 2.1"

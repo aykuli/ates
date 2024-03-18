@@ -1,0 +1,35 @@
+<h2>Дашборд аналитики</h2>
+
+<div>
+    <div>
+        <b>Сегодня топ-менеджмент заработал: </b>
+        <div style="display:inline;  padding: 5px; background: #04AA6D;color: #fff"><%= @management_balance %></div>
+
+    </div>
+<p></p>
+    <div>
+        <b>Попугов ушло в минус: </b>
+        <div style="display:inline; padding: 5px; background: #ff5555;color: #fff"><%= @popugs_quantity_in_debt %></div>
+    </div>
+    <div>
+      <br/>
+        <b>Самые дорогие задачи </b>
+      <table id="tstyle">
+        <thead>
+        <tr>
+          <th>Дата решения задачи</th>
+          <th>Цена решения задачи</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <% @tasks.each do |tc| %>
+          <tr>
+            <td><%= tc[:date] %> </td>
+            <td><%= tc[:cost] %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+</div>

@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "billing.deposited.v1",
+  "description": "json schema for money deposited event from the user's account (version 1)",
+  "type": "object",
+
+  "properties": {
+    "event_uid":     { "type": "string" },
+    "event_version": { "enum": [1] },
+    "event_name":    { "type": "string" },
+    "event_time":    { "type": "string" },
+    "producer":      { "type": "string" },
+
+    "data": { "$ref": "#/definitions/event_data" }
+  },
+
+  "definitions": {
+    "event_data": {
+      "type": "object",
+      "properties": {
+        "task_public_uid":    { "type": "string" },
+        "user_public_uid":    { "type": "string" },
+        "cost":               { "type": "number" },
+        "billing_updated_at": { "type":  "string" }
+      },
+      "required": ["task_public_uid", "user_public_uid", "cost"]
+    }
+  },
+
+  "required": ["event_version", "event_name", "data"]
+}

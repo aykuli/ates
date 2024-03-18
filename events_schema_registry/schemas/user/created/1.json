@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "user.created.v1",
+  "description": "json schema for user created event (version 1)",
+  "type": "array",
+
+  "properties": {
+    "event_uid":     { "type": "string" },
+    "event_version": { "enum": [1] },
+    "event_name":    { "type": "string" },
+    "event_time":    { "type": "string" },
+    "producer":      { "type": "string" },
+
+    "data": { "$ref": "#/definitions/event_data" }
+  },
+
+  "definitions": {
+    "event_data": {
+      "type": "object",
+      "properties": {
+        "public_uid": { "type": "string" },
+        "email":      { "type": "string" },
+        "admin":      { "type": "boolean" }
+      },
+      "required": ["public_uid", "email", "admin"]
+    }
+  },
+
+  "required": ["event_name", "data"]
+}

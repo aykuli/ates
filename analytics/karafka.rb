@@ -8,5 +8,28 @@ class KarafkaApp < Karafka::App
   end
 
   routes.draw do
+    topic 'billings-streaming' do
+      consumer BillingsConsumer
+
+      # dead_letter_queue(
+      #   topic: 'billings-streaming-dead-messages',
+      #   max_retries: 2,
+      #   independent: false
+      # )
+    end
+
+    topic 'tasks-streaming' do
+      consumer TasksConsumer
+
+      dead_letter_queue(
+        topic: 'tasks-streaming-dead-messages',
+        max_retries: 2,
+        independent: false
+      )
+    end
+    #
+    # topic 'users-streaming' do
+    #   consumer UsersConsumer
+    # end
   end
 end

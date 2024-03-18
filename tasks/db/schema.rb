@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_20_152141) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_09_170414) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
-  create_enum "state_code", ["created", "assigned", "reassigned", "done"]
+  create_enum "state_code", ["created", "assigned", "reassigned", "completed"]
 
   create_table "events", force: :cascade do |t|
     t.integer "task_id", null: false
@@ -46,6 +46,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_20_152141) do
     t.uuid "public_uid", default: -> { "gen_random_uuid()" }, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "jira_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -55,6 +56,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_20_152141) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "users_email_key", unique: true
+    t.index ["public_uid"], name: "users_uid_key", unique: true
   end
 
   add_foreign_key "events", "states", name: "events_states_fkey"

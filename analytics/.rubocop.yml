@@ -38,3 +38,10 @@ Rails/HasManyOrHasOneDependent:
 
 Metrics/MethodLength:
   Max: 20
+  Exclude:
+    - app/repositories/tasks_repository.rb
+
+Metrics/AbcSize:
+  Exclude:
+    - app/consumers/*
+    - app/repositories/tasks_repository.rb

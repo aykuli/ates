@@ -19,3 +19,11 @@ kafka:
 karafka:
   admin:    admin
   password: password
+
+clickhouse:
+  scheme: http
+  host: clickhouse
+  port: 8123
+  database: task
+  user: user
+  password: password

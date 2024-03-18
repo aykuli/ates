@@ -11,7 +11,7 @@ module Users
       build_resource(registration_params)
 
       if resource.save
-        users_producer.produce_async(EVENT_NAME, event)
+        users_producer.produce_async(build_user_event(EVENT_NAME, resource))
 
         if resource.active_for_authentication?
           set_flash_message :notice, :signed_up if is_navigational_format?

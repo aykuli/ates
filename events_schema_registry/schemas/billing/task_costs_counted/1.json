@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "billing.task_costs_counted.v1",
+  "description": "json schema for task costs counted event for task (version 1)",
+  "type": "object",
+
+  "properties": {
+    "event_uid":     { "type": "string" },
+    "event_version": { "enum": [1] },
+    "event_name":    { "type": "string" },
+    "event_time":    { "type": "string" },
+    "producer":      { "type": "string" },
+
+    "data": { "$ref": "#/definitions/event_data" }
+  },
+
+  "definitions": {
+    "event_data": {
+      "type": "object",
+      "properties": {
+        "task_public_uid":   { "type": "string" },
+        "task_assign_cost":  { "type": "number" },
+        "task_solving_cost": { "type": "number" }
+      },
+      "required": ["task_public_uid", "task_assign_cost", "task_solving_cost"]
+    }
+  },
+
+  "required": ["event_version", "event_name", "data"]
+}

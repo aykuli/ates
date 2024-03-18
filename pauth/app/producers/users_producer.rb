@@ -6,6 +6,7 @@ class UsersProducer
   register initialize: true, memoize: true
 
   TOPIC = 'users-streaming'
+  PRODUCER = 'users-service'
 
   # @param event_name [String]
   # @param user       [User]
@@ -14,7 +15,14 @@ class UsersProducer
   # @return           [Rdkafka::Producer::DeliveryHandle]
   def produce_async(event_name, user)
     event = build_user_event(event_name, user)
-    producer.produce_async(topic: TOPIC, payload: event.to_json)
+
+    result = SchemaRegistry.validate_event(event, event_name, version: 1)
+
+    if result.success?
+      producer.produce_async(topic: TOPIC, payload: event.to_json)
+    else
+      # TODO: logging errors
+    end
   end
 
   private
@@ -25,6 +33,10 @@ class UsersProducer
   def build_user_event(event_name, user)
     {
       event_name:,
+      event_uid: SecureRandom.uuid,
+      event_version: 1,
+      event_time: Time.zone.now.to_s,
+      producer: PRODUCER,
       data: {
         public_uid: user.public_uid,
         email: user.email,

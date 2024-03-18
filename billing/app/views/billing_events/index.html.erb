@@ -1,0 +1,37 @@
+<h2>Дашборд биллинга</h2>
+<br />
+<p>Вы: <%= @current_user.email %></p>
+<br />
+<p>Текущий баланс: <b><%= @current_balance %></b></p>
+<br />
+
+<p><b>Лог операций</b></p>
+<table id="tstyle">
+  <thead>
+  <tr>
+    <th>Событие</th>
+    <th>Название задачи</th>
+    <th>Цена события</th>
+    <th>Цена ассайна</th>
+    <th>Цена решения</th>
+    <th>uid задачи</th>
+    <th>Jira ID задачи</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @billing_events.each do |event| %>
+    <tr>
+      <td><%= event.state.title %></td>
+      <td><%= event.task.title %></td>
+      <td><%= event.cost %></td>
+      <td><%= event.task.assign_cost %></td>
+      <td><%= event.task.solving_cost %></td>
+      <td><%= event.task.public_uid %></td>
+      <td><%= event.task.jira_id %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<hr />
